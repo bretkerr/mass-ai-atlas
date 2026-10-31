@@ -97,9 +97,12 @@ html:not(.dark) .map-legend{background:rgba(255,255,255,.92)}
 html:not(.dark) #gxLegend{background:rgba(10,15,30,.92)} /* the galaxy stays dark in light mode */
 html:not(.dark) .map-search input{background:rgba(255,255,255,.94)}
 html:not(.dark) .map-results{background:rgba(255,255,255,.97)}
-::-webkit-scrollbar{width:10px;height:10px}
-::-webkit-scrollbar-thumb{background:#27345e;border-radius:6px}
-::-webkit-scrollbar-track{background:transparent}
+/* a wide, warm scrollbar that's easy to grab */
+::-webkit-scrollbar{width:16px;height:16px}
+::-webkit-scrollbar-thumb{background:#cbb68c;border-radius:10px;border:4px solid transparent;background-clip:content-box;min-height:48px}
+::-webkit-scrollbar-thumb:hover{background:#b08d4a;background-clip:content-box}
+::-webkit-scrollbar-track{background:rgba(203,182,140,.08)}
+html{scrollbar-color:#cbb68c rgba(203,182,140,.08)}
 
 /* ---------- HERO ---------- */
 .hero{position:relative;padding:34px 28px 20px;overflow:hidden;border-bottom:1px solid var(--line)}
@@ -274,6 +277,27 @@ html:not(.dark) .gx-search .map-results{background:rgba(10,15,30,.97);color:#e6e
 .rcpt-src{color:var(--gold-ink)}
 .rcpt-doubt{margin-top:4px;color:#fbbf24}
 html:not(.dark) .rcpt-doubt{color:#b45309}
+/* ---------- warm top: the site header and tab bar read as paper, not night ---------- */
+:root{--warm:#f4efe4;--warm-2:#ebe3d3;--warm-ink:#1f1b16;--warm-muted:#625848;--warm-line:rgba(70,52,25,.14);--warm-accent:#7a5300}
+#site-header{background:var(--warm);border-bottom:1px solid var(--warm-line)}
+#site-header nav a{color:var(--warm-muted)}
+#site-header nav a:hover{color:var(--warm-ink)}
+#site-header button{color:var(--warm-ink);border-color:var(--warm-line);background:var(--warm-2)}
+#site-header button svg,#mobile-menu-btn{color:var(--warm-ink)}
+#site-header button:hover{border-color:#c79100}
+#newBanner{background:#f1e2bf;color:#5b3f00;border-color:rgba(122,83,0,.22)}
+#newBanner a,#newBanner button{color:#5b3f00}
+.nav,html:not(.dark) .nav{background:rgba(244,239,228,.94);border-bottom:1px solid var(--warm-line)}
+.nav .tab{color:var(--warm-muted)}
+.nav .tab:hover{color:var(--warm-ink);background:rgba(122,83,0,.08)}
+.nav .tab.active{color:#1f1b16}
+.nav .tab.suggest{border-color:rgba(122,83,0,.4);color:var(--warm-accent)}
+.nav .tab.suggest:hover{background:rgba(199,145,0,.14);color:var(--warm-ink)}
+.nav .nav-hint{color:var(--warm-muted)}
+.nav .nav-hint a{color:var(--warm-accent)!important}
+.nav .nav-gh{color:var(--warm-muted);border-color:var(--warm-line)}
+.nav .nav-gh:hover{color:var(--warm-ink);border-color:rgba(122,83,0,.4);background:rgba(199,145,0,.1)}
+
 /* ---------- the counter: ask → receipt ---------- */
 .counter{--paper:#f7f7f2;--ink:#17161c;--ink2:#5e5c66;--doubt:#b45309;
   border-bottom:1px solid var(--line);padding:40px 28px 36px;position:relative;overflow:hidden}
@@ -643,7 +667,7 @@ browse the <a href="e/">full organization index</a> or use the open dataset
 <header id="site-header" class="relative z-50 px-4 py-4 md:px-8 bg-white/90 dark:bg-dark-bg/95 backdrop-blur-md border-b border-gray-200 dark:border-white/10">
   <div class="max-w-7xl mx-auto flex justify-between items-center">
     <a href="https://the-open-accelerator.com/" class="flex items-center gap-3 z-50">
-      <img id="header-logo" src="https://the-open-accelerator.com/images/toa-white.png" alt="The Open Accelerator" class="h-10 w-auto">
+      <img id="header-logo" src="https://the-open-accelerator.com/images/toa-black.png" alt="The Open Accelerator" class="h-10 w-auto">
     </a>
     <nav class="hidden lg:flex items-center gap-5">
       <a href="https://the-open-accelerator.com/about-why.html" class="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white font-medium relative group transition-colors">About<span class="absolute bottom-0 left-0 w-0 group-hover:w-full h-0.5 bg-gold transition-all duration-300"></span></a>
@@ -2528,7 +2552,7 @@ document.addEventListener("keydown", e=>{ if(e.key === "Escape" && tourStep >= 0
 
   // Light/dark theme toggle (standard TOA header). Defaults to dark; persists the user's choice.
   var TOA_LOGO={dark:'https://the-open-accelerator.com/images/toa-white.png',light:'https://the-open-accelerator.com/images/toa-black.png'};
-  function updateLogos(theme){var h=document.getElementById('header-logo');if(h)h.src=TOA_LOGO[theme]||TOA_LOGO.dark;}
+  function updateLogos(theme){var h=document.getElementById('header-logo');if(h)h.src=TOA_LOGO.light;}   // the header is warm paper in both themes
   function toggleTheme(){
     var html=document.documentElement;
     var nowLight=html.classList.toggle('dark')===false; // toggle returns true if 'dark' now present
