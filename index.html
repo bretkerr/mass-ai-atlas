@@ -16,7 +16,7 @@
 <!-- Tailwind (same config as the rest of the TOA site) — preflight off so it doesn't reset this page's custom app CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-tailwind.config = {
+if(window.tailwind) tailwind.config = {
   darkMode: 'class',
   corePlugins: { preflight: false },
   theme: {
@@ -1580,7 +1580,9 @@ const makeBasemap = () => L.maplibreGL({
   attribution:'&copy; <a href="https://openfreemap.org">OpenFreeMap</a> &copy; <a href="https://www.openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 });
 function setMapTiles(){ if(!map) return; if(mapTiles) map.removeLayer(mapTiles); mapTiles = makeBasemap().addTo(map); }
-(function initMap(){
+// If the map libraries can't load (offline, blocked CDN), keep the rest of the app alive:
+// the receipt, compare and review don't need a map.
+try{ (function initMap(){
   // Two camera presets. "boston" is the default — the Kendall/Back Bay core where most
   // of the ecosystem sits. "state" frames the whole Commonwealth so the Worcester,
   // Amherst, Fall River and Route 128 entries are visible without hunting for them.
@@ -1764,7 +1766,7 @@ function setMapTiles(){ if(!map) return; if(mapTiles) map.removeLayer(mapTiles);
     });
   });
   document.addEventListener("click", e=>{ if(!e.target.closest(".map-search")) res.classList.remove("open"); });
-})();
+})(); }catch(e){ console.warn("Map unavailable:", e.message); const m = document.getElementById("map"); if(m) m.innerHTML = '<p style="padding:24px;color:#5f5547">The map needs the network. The receipt above does not.</p>'; }
 
 /* ---------- galaxy ---------- */
 const gxCanvas = $("galaxy"), gxCtx = gxCanvas.getContext("2d"), gxTip = $("gxTip");
@@ -2320,6 +2322,7 @@ function printReceipt(){
 }
 function applyAsk(text){
   text = (text||"").trim();
+  if(/^\s*i\s+need\b/i.test(text)){ text = text.replace(/^\s*i\s+need\s*/i, ""); $("askInput").value = text; fitAsk(); }
   if(!text){ $("askHeard").textContent = ""; askText = ""; renderReceipt(false); return; }
   askText = text;
   fitAsk();

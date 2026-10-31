@@ -23,7 +23,7 @@ Also surfaced on screen, from this morning's numbers:
 |---|---|---|
 | 4 · funders without a check size | 13 of 61 state one | "Not sorted by check size: only 13 of 61 funders state one" whenever Funding is asked for; "trust less: no check size stated" per entry |
 | 5 · last checked in June | 52 entries | "Last checked by a person N months ago" per entry; every card and tile shows the month |
-| 2 · no connections | 104 without `links` | "Not connected to any other org in the Atlas" (counts links in either direction) |
+| 2 · no connections | 104 without their own `links` | "Not connected to any other org in the Atlas" — counts links in either direction, so fewer entries (74) are flagged than lack the field |
 | 6 · coverage west of Worcester | 5 entries | "None of these are west of Worcester. That is thin coverage, not proof there's nothing there." |
 | 3 · startups with no stage | 35, all startups | Not treated as a gap: "Startups aren't matched to stages: they're peers, not resources." |
 
