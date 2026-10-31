@@ -228,6 +228,14 @@ html:not(.dark) .gx-search .map-results{background:rgba(10,15,30,.97);color:#e6e
 .pf-note textarea{font:13px/1.4 'Red Hat Display',system-ui,sans-serif;color:var(--text);background:var(--panel2);border:1px solid var(--line);
   border-radius:8px;padding:7px 9px;resize:vertical;min-height:44px}
 .rcpt-note,.sl-note{display:block;margin-top:4px;color:var(--text);font-style:italic}
+.logo{--s:28px;position:relative;flex:none;width:var(--s);height:var(--s);border-radius:8px;overflow:hidden;display:inline-grid;place-items:center;
+  background:var(--c);color:#0a0a0f;font:800 calc(var(--s)*.38)/1 'Red Hat Display',system-ui,sans-serif;letter-spacing:-.02em}
+.logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:3px;box-sizing:border-box}
+.logo-lg{--s:40px;border-radius:10px}
+.pf-head{display:flex;gap:11px;align-items:center;margin-bottom:6px}
+.pf-head .pop-name{margin-bottom:1px}
+.pf-head .pop-cat{margin-bottom:0}
+.card-h{display:flex;gap:10px;align-items:center}
 .pf-full{display:none}
 .pf.big .pf-full{display:block}
 .pf.big .pf-short{display:none}
@@ -244,8 +252,8 @@ html:not(.dark) .gx-search .map-results{background:rgba(10,15,30,.97);color:#e6e
 html:not(.dark) .rcpt-doubt{color:#b45309}
 /* ---------- the counter: ask → receipt ---------- */
 .counter{--paper:#f7f7f2;--ink:#17161c;--ink2:#5e5c66;--doubt:#b45309;
-  border-bottom:1px solid var(--line);padding:56px 28px 64px;position:relative;overflow:hidden}
-.counter-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,380px);gap:72px;align-items:start}
+  border-bottom:1px solid var(--line);padding:40px 28px 36px;position:relative;overflow:hidden}
+.counter-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:64px;align-items:center}
 .ask{min-width:0}
 .ask-sentence{display:flex;flex-wrap:wrap;align-items:baseline;gap:.25em .35em;font-weight:800;
   font-size:clamp(34px,5.4vw,68px);line-height:1.02;letter-spacing:-.035em;color:var(--text);cursor:text}
@@ -254,7 +262,7 @@ html:not(.dark) .rcpt-doubt{color:#b45309}
   border-bottom:.07em solid var(--gold);border-radius:0;padding:0 0 .04em;outline:none;caret-color:var(--gold)}
 .ask-input::placeholder{color:var(--muted);opacity:.45;font-weight:300}
 .ask-input:focus-visible{border-bottom-color:var(--gold-light)}
-.ask-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.ask-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
 .ask-mic,.ask-go{font:600 15px/1 inherit;font-family:inherit;border-radius:999px;padding:15px 22px;cursor:pointer;display:inline-flex;align-items:center;gap:10px}
 .ask-go{background:var(--gold);color:#17161c;border:1px solid var(--gold)}
 .ask-go:hover{background:var(--gold-light)}
@@ -274,21 +282,21 @@ html:not(.dark) .rcpt-doubt{color:#b45309}
   .ask-mic.live .mic-waves path,.ask-mic.live .mic-body{animation:none}
   .ask-mic.live .mic-waves path{opacity:1}
 }
-.ask-sub{margin:26px 0 0;max-width:46ch;color:var(--muted);font-size:16px;line-height:1.55}
+.ask-sub{margin:20px 0 0;max-width:46ch;color:var(--muted);font-size:16px;line-height:1.55}
 .ask-try{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;margin-top:18px;font-size:14px}
 .ask-try span{color:var(--muted)}
 .ask-try button{background:none;border:0;padding:2px 0;font:inherit;color:var(--text);cursor:pointer;
   text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px;text-decoration-thickness:1px}
 .ask-try button:hover{text-decoration-color:var(--gold)}
-.ask-heard{font-size:14px;color:var(--muted);margin-top:18px;min-height:1.4em}
+.ask-heard{font-size:14px;color:var(--muted);margin-top:12px;min-height:0}
 .ask-heard b{color:var(--text);font-weight:600}
 
 /* the till: a gold slot, a receipt hanging from it */
 .till{position:relative;padding-top:6px}
 .till-slot{height:14px;border-radius:7px;background:#000;box-shadow:inset 0 0 0 2px var(--gold),0 0 30px rgba(255,198,0,.18);position:relative;z-index:2}
 .till-window{overflow:hidden;margin:-7px 14px 0;padding:0 6px 22px}
-.receipt{background:var(--paper);color:var(--ink);font:13px/1.55 ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-  padding:26px 22px 34px;transform:rotate(-1.4deg);transform-origin:top center;
+.receipt{background:var(--paper);color:var(--ink);font:12px/1.5 ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  padding:18px 18px 26px;transform:rotate(-1.4deg);transform-origin:top center;
   box-shadow:0 18px 40px rgba(0,0,0,.45);
   -webkit-mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/12px 100%;
           mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/12px 100%}
@@ -296,10 +304,10 @@ html:not(.dark) .rcpt-doubt{color:#b45309}
 @keyframes printOut{from{transform:translateY(-100%) rotate(0)}to{transform:translateY(0) rotate(-1.4deg)}}
 @media (prefers-reduced-motion: reduce){.receipt.printing{animation:none}}
 .r-head{text-align:center}
-.r-shop{font-weight:700;font-size:15px;letter-spacing:.02em}
+.r-shop{font-weight:700;font-size:13.5px;letter-spacing:.02em}
 .r-meta{color:var(--ink2);font-size:12px}
 .r-q{margin:12px 0 0;font-size:13px}
-.r-rule{border:0;border-top:1px dashed #b9b7bf;margin:14px 0}
+.r-rule{border:0;border-top:1px dashed #b9b7bf;margin:10px 0}
 .r-line{display:flex;justify-content:space-between;gap:12px}
 .r-line button{all:unset;cursor:pointer;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .r-line button:hover{text-decoration:underline}
@@ -311,10 +319,11 @@ html:not(.dark) .rcpt-doubt{color:#b45309}
 .r-foot{text-align:center;color:var(--ink2);font-size:11.5px;margin-top:14px}
 .r-note{font-size:11.5px;color:var(--ink2);margin-top:6px}
 .r-empty{color:var(--ink2);text-align:center;padding:10px 0}
-.r-blank{height:9px;border-radius:2px;background:#e6e5df;margin:10px 0}
+.r-blank{height:8px;border-radius:2px;background:#e6e5df;margin:8px 0}
 .r-blank:nth-child(odd){width:72%}
-.r-bars{height:30px;margin:16px auto 0;width:70%;opacity:.85;
+.r-bars{height:24px;margin:12px auto 0;width:70%;opacity:.85;
   background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 8px,var(--ink) 8px 11px,transparent 11px 12px)}
+.till-actions[hidden]{display:none}
 .till-actions{display:flex;gap:10px;justify-content:center;margin-top:4px}
 .till-btn{font:600 14px/1 inherit;font-family:inherit;padding:12px 18px;border-radius:999px;cursor:pointer;background:var(--text);color:var(--bg);border:1px solid var(--text)}
 .till-btn-ghost{background:none;color:var(--text);border-color:var(--line)}
@@ -1045,6 +1054,16 @@ let sharedList = null;   // set when viewing a ?list= URL someone shared
 /* ---------- map tiles: front = the org, back = its receipts ----------
    ↻ flips the tile to the evidence; ⤢ grows it to show more before the
    full drawer. Both are buttons, so they work by keyboard too. */
+/* the org's own mark, from its own site (the same domain the entry cites as its
+   source): apple-touch-icon, then favicon, then a monogram so nothing ever breaks */
+function logoHtml(d, cls){
+  let origin = ""; try{ origin = new URL(d.url).origin; }catch(e){}
+  const words = d.name.replace(/\(.*?\)/g,"").split(/[\s\-–&]+/).filter(w=>/^[A-Za-z0-9]/.test(w));
+  const mono = (words.length > 1 ? words[0][0] + words[1][0] : (words[0]||"?").slice(0,2)).toUpperCase();
+  const img = origin ? `<img src="${esc(origin)}/apple-touch-icon.png" data-alt="${esc(origin)}/favicon.ico ${esc(origin)}/favicon.svg" alt="" loading="lazy" decoding="async"
+      onload="if(this.naturalWidth<8){this.onerror()}" onerror="const n=(this.dataset.alt||'').split(' ').filter(Boolean);if(n.length){this.src=n.shift();this.dataset.alt=n.join(' ')}else{this.remove()}">` : "";
+  return `<span class="logo ${cls||""}" style="--c:${cColor(d.cat)}" aria-hidden="true"><b>${esc(mono)}</b>${img}</span>`;
+}
 function popTile(d){
   const r = receipts(d);
   const short = d.desc.length>140 ? d.desc.slice(0,140)+"…" : d.desc;
@@ -1058,8 +1077,8 @@ function popTile(d){
   return `<div class="pf" data-id="${d.id}">
     <div class="pf-card">
       <section class="pf-face pf-front" aria-label="${esc(d.name)}">
-        <div class="pop-name">${esc(d.name)}</div>
-        <div class="pop-cat" style="color:${cInk(d.cat)}">${cLabel(d.cat)}</div>
+        <div class="pf-head">${logoHtml(d,"logo-lg")}<div><div class="pop-name">${esc(d.name)}</div>
+        <div class="pop-cat" style="color:${cInk(d.cat)}">${cLabel(d.cat)}</div></div></div>
         ${d.approx ? `<div class="pop-approx">◌ Approximate: this pin marks ${esc(d.loc)}, not the street address.</div>` : ""}
         <div class="pop-desc"><span class="pf-short">${esc(short)}</span><span class="pf-full">${esc(d.desc)}${d.why ? `<br><br>${esc(d.why)}` : ""}</span></div>
         ${offers ? `<div class="pf-offers pf-full">${offers}</div>` : ""}
@@ -2019,7 +2038,7 @@ function renderCards(){
     // (they are absolutely positioned, so nothing moves) to put the name first in
     // the tab order.
     return `<div class="card" style="--cc:${col}" onclick="openDrawer('${d.id}')">
-      <h3><button type="button" class="card-open" onclick="event.stopPropagation();openDrawer('${d.id}')">${esc(d.name)}</button></h3>
+      <h3 class="card-h">${logoHtml(d)}<button type="button" class="card-open" onclick="event.stopPropagation();openDrawer('${d.id}')">${esc(d.name)}</button></h3>
       <div class="card-tools">${canCompare?`<button class="card-tool cmp ${cmpSet.has(d.id)?'on':''}" title="Compare" aria-pressed="${cmpSet.has(d.id)}" aria-label="Add ${esc(d.name)} to comparison" onclick="event.stopPropagation();toggleCompare('${d.id}')">⚖</button>`:""}<button class="card-tool star ${starSet.has(d.id)?'on':''}" title="Save to shortlist" aria-pressed="${starSet.has(d.id)}" aria-label="Save ${esc(d.name)} to your shortlist" onclick="event.stopPropagation();toggleStar('${d.id}')">${starSet.has(d.id)?"★":"☆"}</button></div>
       <div class="c-cat" style="color:${cInk(d.cat)}">${cLabel(d.cat)} · ${esc(d.loc.split(",")[0])}</div>
       <p>${esc(d.desc.length>150 ? d.desc.slice(0,150)+"…" : d.desc)}</p>
@@ -2076,7 +2095,7 @@ function renderReceipt(animate){
   if(!askText){
     el.innerHTML = `<div class="r-head"><div class="r-shop">MASS AI ATLAS</div><div class="r-meta">Shortlist receipt</div></div>
       <hr class="r-rule"><div class="r-empty">Nothing asked yet.<br>Your list prints here.</div>
-      <div class="r-blank"></div><div class="r-blank"></div><div class="r-blank"></div><div class="r-blank"></div>
+      <div class="r-blank"></div><div class="r-blank"></div>
       <hr class="r-rule"><div class="r-foot">Every line checked by a person.<br>Every doubt shown, never hidden.</div>`;
     $("tillActions").hidden = true; return;
   }
