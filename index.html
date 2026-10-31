@@ -542,11 +542,17 @@ html:not(.dark) .dr-verified.stale,html:not(.dark) .stale-tag{color:#b45309;bord
 /* ---------- FOOTER ---------- */
 .footer{border-top:1px solid var(--line);padding:30px 28px 44px;color:var(--muted);font-size:12.5px;line-height:1.6}
 .footer-inner{max-width:1200px;margin:0 auto}
-.partners{display:flex;align-items:center;gap:26px;flex-wrap:wrap;margin-bottom:18px}
-.partners-label{font-size:11px;text-transform:uppercase;letter-spacing:1.6px;color:var(--muted)}
-.partners img{height:30px;width:auto;display:block;opacity:.9;transition:.15s}
-.partners a:hover img{opacity:1}
-.partners img.ibm{height:24px;filter:invert(1) brightness(1.6)}
+/* partner marks sit on a white plate in their true brand colours: on the dark
+   page the Red Hat wordmark and MA AI Hub navy vanished, and inverting IBM's
+   blue turned it orange. A plate reads the same in both themes. */
+.partners{display:inline-flex;align-items:center;gap:28px;flex-wrap:wrap;margin-bottom:22px;
+  background:#fff;border-radius:14px;padding:14px 24px;box-shadow:0 1px 0 rgba(255,255,255,.06),0 10px 30px rgba(0,0,0,.25)}
+.partners-label{font-size:11px;text-transform:uppercase;letter-spacing:1.6px;color:#5b6478}
+.partners img{height:30px;width:auto;display:block;opacity:1;transition:.15s}
+.partners a:hover img{transform:translateY(-1px)}
+.partners img.ibm{height:24px;filter:none}
+html:not(.dark) .partners{box-shadow:0 0 0 1px rgba(15,23,42,.1)}
+@media(max-width:520px){.partners{gap:18px;padding:12px 16px}.partners img{height:24px}.partners img.ibm{height:19px}}
 .toa-links{margin-bottom:14px}
 .toa-links a{color:var(--gold);text-decoration:none;font-weight:600}
 .toa-links a:hover{text-decoration:underline}
