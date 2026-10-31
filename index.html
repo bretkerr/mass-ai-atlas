@@ -152,6 +152,23 @@ html:not(.dark) .map-results{background:rgba(255,255,255,.97)}
 .map-legend{position:absolute;z-index:1000;left:14px;bottom:14px;background:rgba(10,15,30,.92);
   border:1px solid var(--line);border-radius:14px;padding:12px 14px;max-width:230px;backdrop-filter:blur(8px)}
 .map-legend h4{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted);margin-bottom:8px}
+/* movable, minimisable palette */
+.lg-head{display:flex;align-items:center;gap:6px;margin:-4px -6px 6px -4px;cursor:grab;touch-action:none;user-select:none}
+.map-legend.dragging .lg-head{cursor:grabbing}
+.map-legend.dragging{box-shadow:0 18px 40px rgba(0,0,0,.45);transition:none}
+.lg-head h4{flex:1;margin:0}
+.lg-grip,.lg-min{flex:none;width:24px;height:24px;display:grid;place-items:center;border-radius:6px;color:var(--muted);
+  background:none;border:0;font:700 14px/1 inherit;font-family:inherit;cursor:inherit}
+.lg-min{cursor:pointer}
+.lg-grip:hover,.lg-min:hover,.lg-grip:focus-visible,.lg-min:focus-visible{background:rgba(148,163,255,.12);color:var(--text)}
+.map-legend.small{max-width:148px;padding:8px 10px;display:flex;flex-wrap:wrap;gap:2px;align-items:center}
+.map-legend.small .lg-head{flex-basis:100%}
+.map-legend.small .lg-item{width:auto}
+.map-legend.small h4{font-size:0}
+.map-legend.small h4::after{content:"Categories";font-size:10px}
+.map-legend.small .lg-item{font-size:0;gap:0;padding:4px;display:inline-flex}
+.map-legend.small .lg-key{display:none}
+.map-legend.small .lg-head{margin-bottom:2px}
 .lg-item{display:flex;align-items:center;gap:8px;font-size:12.5px;padding:3px 4px;border-radius:7px;cursor:pointer;user-select:none;
   background:none;border:0;color:inherit;font-family:inherit;text-align:left;width:100%}
 .lg-item:hover{background:rgba(148,163,255,.1)}
@@ -2193,6 +2210,60 @@ $("tillOpen").addEventListener("click", ()=>{
   };
   mic.addEventListener("click", toggle);
   document.addEventListener("keydown", e => { if(e.altKey && (e.code === "KeyM")){ e.preventDefault(); toggle(); } });
+})();
+
+/* ---------- legends: drag anywhere on the map, minimise to dots ---------- */
+(function movableLegends(){
+  [["mapLegend","map"],["gxLegend","gx"]].forEach(([id,key])=>{
+    const el = $(id); if(!el) return;
+    const h4 = el.querySelector("h4");
+    const head = document.createElement("div"); head.className = "lg-head";
+    head.innerHTML = `<span class="lg-grip" tabindex="0" role="button" aria-label="Move the legend. Use arrow keys." title="Drag to move">⠿</span>`;
+    h4.replaceWith(head); head.appendChild(h4);
+    const min = document.createElement("button");
+    min.type = "button"; min.className = "lg-min"; head.appendChild(min);
+    if(window.L){ L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el); }
+    const store = "toa-atlas-legend-" + key;
+    let st = {}; try{ st = JSON.parse(localStorage.getItem(store)||"{}"); }catch(e){}
+    const save = () => { try{ localStorage.setItem(store, JSON.stringify(st)); }catch(e){} };
+    const setSmall = on => {
+      el.classList.toggle("small", on); st.small = on;
+      min.textContent = on ? "+" : "–";
+      min.setAttribute("aria-expanded", String(!on));
+      min.setAttribute("aria-label", on ? "Expand the legend" : "Minimise the legend");
+      el.querySelectorAll(".lg-item").forEach(i=>{ if(!i.title) i.title = i.textContent.trim(); });
+    };
+    min.addEventListener("click", ()=>{ setSmall(!el.classList.contains("small")); place(); save(); });
+    // position: stored as top/left inside the map frame, clamped so it never leaves it
+    const frame = el.parentElement;
+    const place = (x, y) => {
+      if(x === undefined){ if(st.x === undefined) return; x = st.x; y = st.y; }
+      const maxX = frame.clientWidth - el.offsetWidth - 6, maxY = frame.clientHeight - el.offsetHeight - 6;
+      x = Math.max(6, Math.min(x, maxX)); y = Math.max(6, Math.min(y, maxY));
+      Object.assign(el.style, {left:x+"px", top:y+"px", bottom:"auto", right:"auto"});
+      st.x = x; st.y = y;
+    };
+    let drag = null;
+    head.addEventListener("pointerdown", e=>{
+      if(e.target === min || e.button !== 0) return;
+      e.preventDefault(); e.stopPropagation();
+      const r = el.getBoundingClientRect(), f = frame.getBoundingClientRect();
+      drag = {dx: e.clientX - r.left, dy: e.clientY - r.top, fx: f.left, fy: f.top};
+      head.setPointerCapture(e.pointerId); el.classList.add("dragging");
+    });
+    head.addEventListener("pointermove", e=>{ if(drag) place(e.clientX - drag.fx - drag.dx, e.clientY - drag.fy - drag.dy); });
+    const end = ()=>{ if(!drag) return; drag = null; el.classList.remove("dragging"); save(); };
+    head.addEventListener("pointerup", end); head.addEventListener("pointercancel", end);
+    head.querySelector(".lg-grip").addEventListener("keydown", e=>{
+      const step = e.shiftKey ? 40 : 10, d = {ArrowLeft:[-step,0], ArrowRight:[step,0], ArrowUp:[0,-step], ArrowDown:[0,step]}[e.key];
+      if(!d) return; e.preventDefault();
+      const r = el.getBoundingClientRect(), f = frame.getBoundingClientRect();
+      place(r.left - f.left + d[0], r.top - f.top + d[1]); save();
+    });
+    setSmall(!!st.small);
+    place();
+    addEventListener("resize", ()=>place());
+  });
 })();
 
 /* ---------- deep links (shareable URLs) ---------- */
