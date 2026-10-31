@@ -290,11 +290,15 @@ html:not(.dark) .rcpt-doubt{color:#b45309}
 .hero,.counter{--bg:#f4efe4;--panel:#fffaf0;--panel2:#ebe3d3;--line:rgba(70,52,25,.14);
   --text:#1f1b16;--muted:#5f5547;--gold-ink:#8a5a00;background:var(--bg);color:var(--text)}
 .counter{--bg:#ede5d5;--paper:#fbfaf6}
-.hero::before{background:radial-gradient(ellipse 60% 50% at 20% 30%,rgba(255,198,0,.16),transparent 60%),
-  radial-gradient(ellipse 50% 45% at 80% 20%,rgba(214,150,80,.12),transparent 60%),
-  radial-gradient(ellipse 45% 40% at 60% 90%,rgba(255,226,150,.18),transparent 60%)}
-.hero .brand h1 span{background:none;-webkit-text-fill-color:currentColor;color:#a06a00}
-.hero .stat b{background:linear-gradient(90deg,#1f1b16,#6b5134);-webkit-background-clip:text;background-clip:text}
+/* the hero steps down from the black header to a warm graphite, so the ivory
+   counter and the daylight map below read as distinct bands */
+.hero{--bg:#34302b;--panel:#403b35;--panel2:#4a443d;--line:rgba(255,240,215,.14);
+  --text:#f4efe4;--muted:#c4baa9;--gold-ink:#ffc600}
+.hero::before{background:radial-gradient(ellipse 60% 50% at 20% 30%,rgba(255,198,0,.10),transparent 60%),
+  radial-gradient(ellipse 50% 45% at 80% 20%,rgba(214,150,80,.10),transparent 60%),
+  radial-gradient(ellipse 45% 40% at 60% 90%,rgba(255,226,150,.08),transparent 60%)}
+.hero .brand h1 span{background:none;-webkit-text-fill-color:currentColor;color:#ffc600}
+.hero .stat b{background:linear-gradient(90deg,#f4efe4,#e2c999);-webkit-background-clip:text;background-clip:text}
 .counter .ask-input{border-bottom-color:#d9a400;caret-color:#a06a00}
 .counter .ask-input::placeholder{opacity:.5}
 .counter .receipt{box-shadow:0 18px 40px rgba(60,40,10,.22)}
