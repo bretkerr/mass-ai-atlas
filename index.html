@@ -268,6 +268,20 @@ html:not(.dark) .gx-search .map-results{background:rgba(10,15,30,.97);color:#e6e
 .pf.big .pf-full{display:block}
 .pf.big .pf-short{display:none}
 .pf-offers{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px;margin-bottom:6px}
+/* the full-details drawer: the same warm paper as the map tiles, in every theme */
+.drawer{--bg2:#f4efe4;--panel:#fbf8f2;--panel2:#ebe3d3;--line:rgba(70,52,25,.16);--text:#1f1b16;--muted:#5f5547;--gold-ink:#8a5a00;
+  background:var(--bg2);color:var(--text);border-left-color:rgba(70,52,25,.18);box-shadow:-20px 0 50px rgba(30,20,5,.28)}
+.drawer .dr-cat{color:#6b5134!important}
+.drawer .dr-body p,.drawer .dr-why div{color:#3a3228}
+.drawer .dr-why b{color:#6b5134}
+.drawer .dr-verified.stale,.drawer .stale-tag{color:#b45309;border-color:rgba(180,83,9,.35)}
+.drawer .dr-apply{color:#15803d}
+.drawer .dr-event{color:#be185d}
+.drawer .meet-row{background:rgba(122,83,0,.06)}
+.drawer .dr-close{color:#5f5547;background:var(--panel)}
+.drawer .dr-close:hover{color:#1f1b16}
+.drawer a{color:#8a5a00}
+.drawer a.btn-pri{color:#000}
 /* warm tiles: the front matches the warm hero; the back is already receipt paper */
 .pf-front{--panel:#f4efe4;--panel2:#ebe3d3;--line:rgba(70,52,25,.16);--text:#1f1b16;--muted:#5f5547;--gold-ink:#8a5a00;
   background:var(--panel);color:var(--text);border-color:rgba(70,52,25,.12);box-shadow:0 14px 34px rgba(30,20,5,.35)}
