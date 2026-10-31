@@ -189,26 +189,149 @@ html:not(.dark) .gx-search .map-results{background:rgba(10,15,30,.97);color:#e6e
 .pop-btn{display:inline-block;font-size:12px;font-weight:700;color:#000;background:linear-gradient(90deg,#ffd54f,#ffc600);
   padding:6px 12px;border-radius:8px;cursor:pointer;text-decoration:none}
 .pulse-dot{border-radius:50%;box-shadow:0 0 10px 2px currentColor;border:2px solid rgba(255,255,255,.75)}
+/* while zooming, drop the per-pin glow: ~200 blurred shadows repainted every frame is the jank */
+.leaflet-zoom-anim .pulse-dot,.map-zooming .pulse-dot{box-shadow:none}
+.leaflet-zoom-anim .leaflet-marker-pane,.map-zooming .leaflet-marker-pane{will-change:transform}
 /* Probe 1: approximate pin = hollow dashed ring, translucent fill, no glow */
 .approx-ring{width:22px;height:22px;border-radius:50%;border:2px dashed currentColor;box-sizing:border-box;
   background:color-mix(in srgb, currentColor 18%, transparent)}
 .pop-approx{font-size:12px;color:var(--muted);margin:4px 0 6px}
+/* flippable tiles: the wrapper goes transparent; each face is the card */
+.pop-flip .leaflet-popup-content-wrapper{background:none;border:0;box-shadow:none;padding:0}
+.pop-flip .leaflet-popup-content{margin:0;width:auto!important}
+.pf{width:260px;perspective:1100px;transition:width .35s cubic-bezier(.3,.7,.2,1)}
+.pf.big{width:400px}
+.pf-card{display:grid;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,.7,.2,1)}
+.pf.flipped .pf-card{transform:rotateY(180deg)}
+.pf-face{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--panel);color:var(--text);
+  border:1px solid var(--line);border-radius:14px;padding:14px 16px 12px;box-shadow:0 14px 34px rgba(0,0,0,.4);display:flex;flex-direction:column}
+.pf-back{transform:rotateY(180deg);background:#f7f7f2;color:#17161c;border-color:transparent;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:12px;line-height:1.5}
+.pf-back .pop-name{font-family:'Red Hat Display',system-ui,sans-serif;margin-top:2px}
+.pf-stamp{align-self:flex-end;transform:rotate(4deg);border:2px solid #3f4bc4;color:#3f4bc4;border-radius:8px;padding:4px 8px;
+  font-size:10.5px;line-height:1.25;text-align:center;margin:-2px 18px 4px 0}
+.pf-src{color:#3f4bc4;word-break:break-all}
+.pf-label{margin-top:10px;color:#5e5c66}
+.pf-doubt{color:#b45309}
+.pf-ok{color:#1f7a4d}
+.pf-fact b{font-weight:700}
+.pf-bar{display:flex;gap:6px;align-items:center;margin-top:auto;padding-top:10px;flex-wrap:wrap}
+.pf-tool{font:600 11.5px/1 'Red Hat Display',system-ui,sans-serif;padding:7px 9px;border-radius:999px;cursor:pointer;
+  background:none;color:inherit;border:1px solid currentColor;opacity:.75}
+.pf-tool:hover,.pf-tool:focus-visible{opacity:1}
+.pf-bar .pop-btn{margin-left:auto;border:0;cursor:pointer;font-family:inherit}
+.pf-back .pop-btn{font-family:'Red Hat Display',system-ui,sans-serif}
+.pf-icon{font-size:14px;padding:5px 8px;line-height:1}
+.pf-star[aria-pressed="true"]{color:var(--gold-ink);opacity:1}
+.pf-note{display:flex;flex-direction:column;gap:4px;margin-top:4px;font-size:11px;color:var(--muted)}
+.pf-note[hidden]{display:none}
+.pf-note textarea{font:13px/1.4 'Red Hat Display',system-ui,sans-serif;color:var(--text);background:var(--panel2);border:1px solid var(--line);
+  border-radius:8px;padding:7px 9px;resize:vertical;min-height:44px}
+.rcpt-note,.sl-note{display:block;margin-top:4px;color:var(--text);font-style:italic}
+.pf-full{display:none}
+.pf.big .pf-full{display:block}
+.pf.big .pf-short{display:none}
+.pf-offers{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px;margin-bottom:6px}
+.pop-flip .leaflet-popup-tip{background:var(--panel)}
+.pop-flip:has(.pf.flipped) .leaflet-popup-tip{background:#f7f7f2}
+.pop-flip .leaflet-popup-close-button{z-index:3;color:var(--muted)!important}
+.pop-flip:has(.pf.flipped) .leaflet-popup-close-button{color:#5e5c66!important}
+@media (prefers-reduced-motion: reduce){.pf-card,.pf{transition:none}}
 .rcpt{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-size:12px;color:var(--muted);line-height:1.5}
 .rcpt-ok{color:var(--muted)}
 .rcpt-src{color:var(--gold-ink)}
 .rcpt-doubt{margin-top:4px;color:#fbbf24}
 html:not(.dark) .rcpt-doubt{color:#b45309}
-.ask{margin:0 0 16px;padding:14px 16px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
-.ask-label{display:block;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-.ask-row{display:flex;gap:8px;align-items:center}
-.ask-input{flex:1;min-width:0;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:11px 12px;font:inherit;font-size:15px}
-.ask-mic{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--panel2);font-size:19px;cursor:pointer}
-.ask-mic.live{border-color:#f87171;box-shadow:0 0 0 4px rgba(248,113,113,.25);animation:askPulse 1.2s ease-in-out infinite}
-@keyframes askPulse{50%{box-shadow:0 0 0 8px rgba(248,113,113,.08)}}
-@media (prefers-reduced-motion: reduce){.ask-mic.live{animation:none}}
-.ask-go{flex:none}
-.ask-heard{font-size:13px;color:var(--muted);margin-top:8px;min-height:1em}
+/* ---------- the counter: ask → receipt ---------- */
+.counter{--paper:#f7f7f2;--ink:#17161c;--ink2:#5e5c66;--doubt:#b45309;
+  border-bottom:1px solid var(--line);padding:56px 28px 64px;position:relative;overflow:hidden}
+.counter-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,380px);gap:72px;align-items:start}
+.ask{min-width:0}
+.ask-sentence{display:flex;flex-wrap:wrap;align-items:baseline;gap:.25em .35em;font-weight:800;
+  font-size:clamp(34px,5.4vw,68px);line-height:1.02;letter-spacing:-.035em;color:var(--text);cursor:text}
+.ask-lead{flex:none}
+.ask-input{flex:1 1 7em;min-width:0;resize:none;overflow:hidden;display:block;font:inherit;letter-spacing:inherit;color:var(--text);background:none;border:0;
+  border-bottom:.07em solid var(--gold);border-radius:0;padding:0 0 .04em;outline:none;caret-color:var(--gold)}
+.ask-input::placeholder{color:var(--muted);opacity:.45;font-weight:300}
+.ask-input:focus-visible{border-bottom-color:var(--gold-light)}
+.ask-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.ask-mic,.ask-go{font:600 15px/1 inherit;font-family:inherit;border-radius:999px;padding:15px 22px;cursor:pointer;display:inline-flex;align-items:center;gap:10px}
+.ask-go{background:var(--gold);color:#17161c;border:1px solid var(--gold)}
+.ask-go:hover{background:var(--gold-light)}
+.ask-mic{background:none;color:var(--text);border:1px solid var(--line)}
+.ask-mic:hover{border-color:var(--muted)}
+.mic-svg{width:24px;height:24px;flex:none;overflow:visible;margin:-4px 0 -4px -4px}
+.mic-body{fill:currentColor;transition:fill .2s}
+.mic-waves path{opacity:0;transform-box:view-box;transform-origin:16px 15px;transition:opacity .25s}
+.ask-mic:hover .mic-waves .w1,.ask-mic:focus-visible .mic-waves .w1{opacity:.55}
+.ask-mic.live{border-color:#f87171;color:#f87171;background:rgba(248,113,113,.08)}
+.ask-mic.live .mic-waves path{animation:micWave 1.2s cubic-bezier(.2,.6,.3,1) infinite}
+.ask-mic.live .mic-waves .w2{animation-delay:.2s}
+.ask-mic.live .mic-body{animation:micBreathe 1.2s ease-in-out infinite}
+@keyframes micWave{0%{opacity:0;transform:scale(.8)}35%{opacity:1}100%{opacity:0;transform:scale(1.18)}}
+@keyframes micBreathe{50%{opacity:.6}}
+@media (prefers-reduced-motion: reduce){
+  .ask-mic.live .mic-waves path,.ask-mic.live .mic-body{animation:none}
+  .ask-mic.live .mic-waves path{opacity:1}
+}
+.ask-sub{margin:26px 0 0;max-width:46ch;color:var(--muted);font-size:16px;line-height:1.55}
+.ask-try{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;margin-top:18px;font-size:14px}
+.ask-try span{color:var(--muted)}
+.ask-try button{background:none;border:0;padding:2px 0;font:inherit;color:var(--text);cursor:pointer;
+  text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px;text-decoration-thickness:1px}
+.ask-try button:hover{text-decoration-color:var(--gold)}
+.ask-heard{font-size:14px;color:var(--muted);margin-top:18px;min-height:1.4em}
 .ask-heard b{color:var(--text);font-weight:600}
+
+/* the till: a gold slot, a receipt hanging from it */
+.till{position:relative;padding-top:6px}
+.till-slot{height:14px;border-radius:7px;background:#000;box-shadow:inset 0 0 0 2px var(--gold),0 0 30px rgba(255,198,0,.18);position:relative;z-index:2}
+.till-window{overflow:hidden;margin:-7px 14px 0;padding:0 6px 22px}
+.receipt{background:var(--paper);color:var(--ink);font:13px/1.55 ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  padding:26px 22px 34px;transform:rotate(-1.4deg);transform-origin:top center;
+  box-shadow:0 18px 40px rgba(0,0,0,.45);
+  -webkit-mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/12px 100%;
+          mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/12px 100%}
+.receipt.printing{animation:printOut .9s cubic-bezier(.3,.7,.2,1) both}
+@keyframes printOut{from{transform:translateY(-100%) rotate(0)}to{transform:translateY(0) rotate(-1.4deg)}}
+@media (prefers-reduced-motion: reduce){.receipt.printing{animation:none}}
+.r-head{text-align:center}
+.r-shop{font-weight:700;font-size:15px;letter-spacing:.02em}
+.r-meta{color:var(--ink2);font-size:12px}
+.r-q{margin:12px 0 0;font-size:13px}
+.r-rule{border:0;border-top:1px dashed #b9b7bf;margin:14px 0}
+.r-line{display:flex;justify-content:space-between;gap:12px}
+.r-line button{all:unset;cursor:pointer;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.r-line button:hover{text-decoration:underline}
+.r-line button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.r-chk{flex:none;color:var(--ink2)}
+.r-item{margin-bottom:9px}
+.r-doubt{color:var(--doubt);padding-left:2ch;font-size:12px}
+.r-sum .r-line{font-size:12px}
+.r-foot{text-align:center;color:var(--ink2);font-size:11.5px;margin-top:14px}
+.r-note{font-size:11.5px;color:var(--ink2);margin-top:6px}
+.r-empty{color:var(--ink2);text-align:center;padding:10px 0}
+.r-blank{height:9px;border-radius:2px;background:#e6e5df;margin:10px 0}
+.r-blank:nth-child(odd){width:72%}
+.r-bars{height:30px;margin:16px auto 0;width:70%;opacity:.85;
+  background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 8px,var(--ink) 8px 11px,transparent 11px 12px)}
+.till-actions{display:flex;gap:10px;justify-content:center;margin-top:4px}
+.till-btn{font:600 14px/1 inherit;font-family:inherit;padding:12px 18px;border-radius:999px;cursor:pointer;background:var(--text);color:var(--bg);border:1px solid var(--text)}
+.till-btn-ghost{background:none;color:var(--text);border-color:var(--line)}
+html:not(.dark) .till-slot{background:#17161c}
+html:not(.dark) .receipt{box-shadow:0 18px 36px rgba(15,23,42,.18)}
+@media (max-width: 880px){
+  .counter{padding:36px 18px 44px}
+  .counter-inner{grid-template-columns:1fr;gap:40px}
+  .till{max-width:380px;width:100%;margin:0 auto}
+}
+@media print{
+  body.receipt-print > :not(.counter){display:none!important}
+  body.receipt-print .counter{border:0;padding:0}
+  body.receipt-print .ask,body.receipt-print .till-slot,body.receipt-print .till-actions{display:none!important}
+  body.receipt-print .counter-inner{display:block}
+  body.receipt-print .receipt{transform:none;box-shadow:none;-webkit-mask:none;mask:none;max-width:420px;margin:0 auto}
+}
 .dir-note{font-size:12.5px;color:var(--muted);margin:-4px 0 12px;display:flex;flex-direction:column;gap:3px}
 .cmp-table a{color:var(--gold-ink)}
 .cmp-verdict{margin:12px 0 0;padding:10px 12px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);font-size:13.5px}
@@ -540,6 +663,54 @@ browse the <a href="e/">full organization index</a> or use the open dataset
   </div>
 </header>
 
+<!-- The counter: a founder says what they need; the Atlas prints a receipt.
+     The words only set the directory's own filters (visible, editable);
+     every line on the receipt is a real entry with the month a person checked it. -->
+<section class="counter" aria-labelledby="askLabel">
+  <div class="counter-inner">
+    <form class="ask" id="askForm" onsubmit="event.preventDefault();applyAsk($('askInput').value)">
+      <label class="ask-sentence" id="askLabel" for="askInput">
+        <span class="ask-lead">I need</span>
+        <textarea class="ask-input" id="askInput" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false"
+          placeholder="pre-seed money and GPUs"></textarea>
+      </label>
+      <div class="ask-actions">
+        <button type="button" class="ask-mic" id="askMic" aria-pressed="false" title="Speak (Alt+M)">
+          <svg class="mic-svg" viewBox="0 0 32 32" aria-hidden="true">
+            <g class="mic-waves" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+              <path class="w1" d="M23.5 11.5a6.5 6.5 0 0 1 0 8"/><path class="w1" d="M8.5 11.5a6.5 6.5 0 0 0 0 8"/>
+              <path class="w2" d="M26.8 8.5a11 11 0 0 1 0 14"/><path class="w2" d="M5.2 8.5a11 11 0 0 0 0 14"/>
+            </g>
+            <rect class="mic-body" x="12.75" y="4.5" width="6.5" height="13" rx="3.25"/>
+            <path d="M10 14.5a6 6 0 0 0 12 0M16 20.5v5M12.5 25.5h7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+          </svg><span class="ask-mic-txt">Say it</span>
+        </button>
+        <button type="submit" class="ask-go">Print my receipt</button>
+      </div>
+      <p class="ask-sub">Say it or type it. The Atlas answers with a receipt: who's on your list, when a person last checked each one, and what to doubt.</p>
+      <div class="ask-try" aria-label="Examples">
+        <span>Try</span>
+        <button type="button" data-try="pre-seed money and a mentor">pre-seed money and a mentor</button>
+        <button type="button" data-try="GPUs and lab space to build a prototype">GPUs and lab space</button>
+        <button type="button" data-try="my first enterprise customers">my first customers</button>
+        <button type="button" data-try="equity-free grants">equity-free grants</button>
+      </div>
+      <div class="ask-heard" id="askHeard" role="status" aria-live="polite"></div>
+    </form>
+
+    <div class="till" aria-live="polite">
+      <div class="till-slot" aria-hidden="true"></div>
+      <div class="till-window">
+        <article class="receipt" id="receipt" aria-label="Your shortlist receipt"></article>
+      </div>
+      <div class="till-actions" id="tillActions" hidden>
+        <button type="button" class="till-btn" id="tillOpen">See the whole list</button>
+        <button type="button" class="till-btn till-btn-ghost" onclick="printReceipt()">Print</button>
+      </div>
+    </div>
+  </div>
+</section>
+
 <nav class="nav">
   <div class="nav-inner">
     <button class="tab active" data-view="map"><span class="ico">🗺️</span>Map</button>
@@ -592,18 +763,6 @@ browse the <a href="e/">full organization index</a> or use the open dataset
 </section>
 
 <section id="view-directory" class="view">
-  <!-- Ask: say or type a founder's need. It only ever sets the filters below,
-       which stay visible and editable — it never names an organization. -->
-  <form class="ask" id="askForm" onsubmit="event.preventDefault();applyAsk($('askInput').value)">
-    <label class="ask-label" for="askInput">Tell the Atlas what you need</label>
-    <div class="ask-row">
-      <input class="ask-input" id="askInput" type="text" autocomplete="off"
-        placeholder="e.g. “pre-seed money and GPUs for a robotics startup”">
-      <button type="button" class="ask-mic" id="askMic" aria-pressed="false" title="Speak your question (Alt+M)" aria-label="Speak your question">🎙</button>
-      <button type="submit" class="btn btn-pri ask-go">Find</button>
-    </div>
-    <div class="ask-heard" id="askHeard" role="status" aria-live="polite"></div>
-  </form>
   <div class="dir-controls">
     <input class="dir-search" id="dirSearch" type="text" placeholder="Search by name, tag, or keyword…">
     <select class="dir-select" id="dirStage" aria-label="Filter by founder stage">
@@ -870,8 +1029,79 @@ const isNew = d => {
 // shortlist / compare state (declared early — renderCards reads them on first paint)
 let starSet = new Set();
 try{ starSet = new Set(JSON.parse(localStorage.getItem("toa-atlas-stars")||"[]")); }catch(e){}
+// personal notes per entry — this browser only, never sent anywhere
+let noteMap = {};
+try{ noteMap = JSON.parse(localStorage.getItem("toa-atlas-notes")||"{}"); }catch(e){}
+let noteT = 0;
+function saveNote(id, text){
+  text = text.trim() ? text : "";
+  if(text) noteMap[id] = text; else delete noteMap[id];
+  try{ localStorage.setItem("toa-atlas-notes", JSON.stringify(noteMap)); }catch(e){}
+  clearTimeout(noteT); noteT = setTimeout(()=>{ renderCards(); if($("shortlistModal").style.display !== "none") renderShortlist(shortlistIds()); }, 400);
+}
 const cmpSet = new Set();
 let sharedList = null;   // set when viewing a ?list= URL someone shared
+
+/* ---------- map tiles: front = the org, back = its receipts ----------
+   ↻ flips the tile to the evidence; ⤢ grows it to show more before the
+   full drawer. Both are buttons, so they work by keyboard too. */
+function popTile(d){
+  const r = receipts(d);
+  const short = d.desc.length>140 ? d.desc.slice(0,140)+"…" : d.desc;
+  const offers = (d.offers||[]).map(o=>OFFERS_META[o]).filter(Boolean).map(m=>`<span>${m.icon} ${m.label}</span>`).join("");
+  const facts = (d.facts||[]).map(f=>`<div class="pf-fact"><b>${esc(f[0])}</b> ${esc(f[1])}</div>`).join("");
+  const mine = side => side==="front" ? `<button type="button" class="pf-tool pf-icon pf-star" onclick="starTile(this)" aria-pressed="${starSet.has(d.id)}" aria-label="Save ${esc(d.name)}" title="Save to your list">${starSet.has(d.id)?"★":"☆"}</button><button type="button" class="pf-tool pf-icon" onclick="noteTile(this)" aria-label="Add a note" title="Add a note">✎</button>` : "";
+  const bar = (side) => `<div class="pf-bar">${mine(side)}
+      <button type="button" class="pf-tool" onclick="flipPop(this)" aria-label="${side==="front"?"Show receipts":"Back to the description"}">↻ ${side==="front"?"Receipts":"Back"}</button>
+      <button type="button" class="pf-tool pf-grow" onclick="growPop(this)" aria-pressed="false">⤢ Bigger</button>
+      <button type="button" class="pop-btn" onclick="openDrawer('${d.id}')">Full details</button></div>`;
+  return `<div class="pf" data-id="${d.id}">
+    <div class="pf-card">
+      <section class="pf-face pf-front" aria-label="${esc(d.name)}">
+        <div class="pop-name">${esc(d.name)}</div>
+        <div class="pop-cat" style="color:${cInk(d.cat)}">${cLabel(d.cat)}</div>
+        ${d.approx ? `<div class="pop-approx">◌ Approximate: this pin marks ${esc(d.loc)}, not the street address.</div>` : ""}
+        <div class="pop-desc"><span class="pf-short">${esc(short)}</span><span class="pf-full">${esc(d.desc)}${d.why ? `<br><br>${esc(d.why)}` : ""}</span></div>
+        ${offers ? `<div class="pf-offers pf-full">${offers}</div>` : ""}
+        <label class="pf-note" ${noteMap[d.id] ? "" : "hidden"}><span>Your note · saved in this browser</span>
+          <textarea rows="2" data-id="${d.id}" oninput="saveNote(this.dataset.id,this.value)" placeholder="Why this one? Who to ask? Next step?">${esc(noteMap[d.id]||"")}</textarea></label>
+        ${bar("front")}
+      </section>
+      <section class="pf-face pf-back" aria-label="Receipts for ${esc(d.name)}" inert>
+        <div class="pf-stamp">✓ Checked by a person<br><b>${esc(fmtMonth(d.lastVerified))}</b></div>
+        <div class="pop-name">${esc(d.name)}</div>
+        ${d.url ? `<a class="pf-src" href="${esc(d.url)}" target="_blank" rel="noopener">${esc(d.url.replace(/^https?:\/\/(www\.)?/,"").replace(/\/$/,""))} ↗</a>` : ""}
+        <div class="pf-label">Trust less because</div>
+        ${r.doubts.length ? r.doubts.map(x=>`<div class="pf-doubt">${esc(x.t)}</div>`).join("") : `<div class="pf-ok">Nothing in the data to doubt.</div>`}
+        ${facts ? `<div class="pf-full"><div class="pf-label">On record</div>${facts}</div>` : ""}
+        ${bar("back")}
+      </section>
+    </div>
+  </div>`;
+}
+function popOf(btn){ return btn.closest(".pf"); }
+function starTile(btn){
+  const id = popOf(btn).dataset.id; toggleStar(id);
+  const on = starSet.has(id); btn.textContent = on ? "★" : "☆"; btn.setAttribute("aria-pressed", String(on));
+}
+function noteTile(btn){
+  const pf = popOf(btn), box = pf.querySelector(".pf-note");
+  box.hidden = false; box.querySelector("textarea").focus();
+  const m = markers[pf.dataset.id]; if(m && m.getPopup()) m.getPopup().update();
+}
+function flipPop(btn){
+  const pf = popOf(btn), on = !pf.classList.contains("flipped");
+  pf.classList.toggle("flipped", on);
+  pf.querySelector(".pf-front").toggleAttribute("inert", on);
+  pf.querySelector(".pf-back").toggleAttribute("inert", !on);
+  setTimeout(()=>pf.querySelector(on ? ".pf-back .pf-tool" : ".pf-front .pf-tool").focus(), 60);
+}
+function growPop(btn){
+  const pf = popOf(btn), on = !pf.classList.contains("big");
+  pf.classList.toggle("big", on);
+  pf.querySelectorAll(".pf-grow").forEach(b=>{ b.setAttribute("aria-pressed", String(on)); b.textContent = on ? "⤡ Smaller" : "⤢ Bigger"; });
+  const m = markers[pf.dataset.id]; if(m && m.getPopup()) m.getPopup().update();
+}
 
 /* ---------- receipts: what the data can and cannot vouch for ----------
    Every signal here is read straight from the entry — nothing is inferred,
@@ -1150,6 +1380,7 @@ const MAP_STYLES = {
 const currentTheme = () => document.documentElement.classList.contains('dark') ? 'dark' : 'light';
 const makeBasemap = () => L.maplibreGL({
   style: MAP_STYLES[currentTheme()],
+  updateInterval: 16,   // redraw the vector basemap every frame while moving (default 32ms lags a pinch)
   attribution:'&copy; <a href="https://openfreemap.org">OpenFreeMap</a> &copy; <a href="https://www.openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 });
 function setMapTiles(){ if(!map) return; if(mapTiles) map.removeLayer(mapTiles); mapTiles = makeBasemap().addTo(map); }
@@ -1170,9 +1401,16 @@ function setMapTiles(){ if(!map) return; if(mapTiles) map.removeLayer(mapTiles);
   let mapView = "boston";
   try{ const saved = localStorage.getItem("toa-atlas-mapview"); if(MAP_VIEWS[saved]) mapView = saved; }catch(e){}
 
-  map = L.map("map", {zoomControl:true, attributionControl:true, maxZoom:19})
+  // Trackpad pinch arrives as a stream of small wheel events. Whole-level snapping
+  // turned each pinch into a lurch; fractional steps with a shorter debounce follow
+  // the fingers instead.
+  map = L.map("map", {zoomControl:true, attributionControl:true, maxZoom:19,
+                      zoomSnap:0.25, zoomDelta:0.5, wheelPxPerZoomLevel:100, wheelDebounceTime:20})
          .setView(MAP_VIEWS.boston.center, MAP_VIEWS.boston.zoom);
   mapTiles = makeBasemap().addTo(map);
+  // same shadow drop for pinch zooms that skip Leaflet's zoom animation
+  map.on("zoomstart", ()=>map.getContainer().classList.add("map-zooming"));
+  map.on("zoomend",   ()=>map.getContainer().classList.remove("map-zooming"));
 
   function applyMapView(key, animate){
     const v = MAP_VIEWS[key]; if(!v) return;
@@ -1265,13 +1503,11 @@ function setMapTiles(){ if(!map) return; if(mapTiles) map.removeLayer(mapTiles);
           `<div class="pulse-dot" style="width:13px;height:13px;background:${col};color:${col}"></div>`,
           iconSize:[13,13], iconAnchor:[7,7]});
     const m = L.marker([d.lat,d.lng], {icon, title: d.approx ? d.name + " (approximate location)" : d.name});
-    m.bindPopup(
-      `<div class="pop-name">${esc(d.name)}</div>`+
-      `<div class="pop-cat" style="color:${cInk(d.cat)}">${cLabel(d.cat)}</div>`+
-      (d.approx ? `<div class="pop-approx">◌ Approximate: this pin marks ${esc(d.loc)}, not the street address.</div>` : "")+
-      `<div class="pop-desc">${esc(d.desc.length>140 ? d.desc.slice(0,140)+"…" : d.desc)}</div>`+
-      `<span class="pop-btn" onclick="openDrawer('${d.id}')">Full details →</span>`,
-      {maxWidth:260});
+    // built once and reused, so a flipped or enlarged tile keeps its state
+    // when Leaflet re-measures it
+    let tileEl = null;
+    m.bindPopup(() => { if(!tileEl){ const t = document.createElement("div"); t.innerHTML = popTile(d); tileEl = t.firstElementChild; } return tileEl; },
+      {maxWidth:420, minWidth:250, className:"pop-flip"});
     pinGroup().addLayer(m);
     markers[d.id] = m;
   });
@@ -1656,6 +1892,8 @@ renderStepper(); renderJourney();
 const dirCats = new Set(Object.keys(CATS));
 const dirNeeds = new Set();   // soft needs — values from the `offers` vocabulary
 let dirOpenOnly = false;      // ⏳ hard constraint: is this org accepting applications?
+let dirResult = {list:[], notes:[], relaxed:false, band:0};   // what the directory is showing now
+let askText = "";             // the founder's own words, printed at the top of the receipt
 (function initDirectory(){
   // "I need…" chips — filter by what an org gives founders, plus open applications
   const nc = $("needChips");
@@ -1760,6 +1998,8 @@ function renderCards(){
   }
   if(st && DATA.some(d=>d.cat==="startup")) notes.push(`Startups aren't matched to stages: they're peers, not resources. Find them under AI Companies & Startups.`);
   $("dirNote").innerHTML = notes.map(n=>`<div>ⓘ ${esc(n)}</div>`).join("");
+  dirResult = {list, notes, relaxed, band};
+  if(typeof renderReceipt === "function") renderReceipt(false);
   $("cards").innerHTML = list.map(d=>{
     const col=cColor(d.cat);
     // any two entries can be compared: "which of these do I trust less?" is a
@@ -1770,6 +2010,7 @@ function renderCards(){
       `<span class="rcpt-ok">✓ Checked by a person ${esc(fmtMonth(d.lastVerified))}</span>` +
       (d.url ? ` · <a class="rcpt-src" href="${esc(d.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">source ↗</a>` : "") +
       (rc.doubts.length ? `<div class="rcpt-doubt"><b>Trust less:</b> ${rc.doubts.map(x=>esc(x.t)).join(" · ")}</div>` : "") +
+      (noteMap[d.id] ? `<div class="rcpt-note">✎ ${esc(noteMap[d.id])}</div>` : "") +
       `</div>`;
     // The card stays mouse-clickable, but the org name is a real button so the
     // entry is reachable by keyboard — before this, 171 cards had zero focusable
@@ -1826,17 +2067,82 @@ function setAskFilters({needs, stage}){
   $("dirStage").value = stage ? String(stage) : "";
   renderCards();
 }
+/* the receipt: the top of the directory's current list, surest first */
+const RECEIPT_LINES = 5;
+const shortMonth = ym => { if(!ym) return "—"; const [y,m] = ym.split("-"); return ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"][+m-1] + " " + y.slice(2); };
+const DOUBT_SHORT = {approx:"pin is a neighbourhood, not an address", age:null, check:"no check size stated", links:"not connected to any other org"};
+function renderReceipt(animate){
+  const el = $("receipt");
+  if(!askText){
+    el.innerHTML = `<div class="r-head"><div class="r-shop">MASS AI ATLAS</div><div class="r-meta">Shortlist receipt</div></div>
+      <hr class="r-rule"><div class="r-empty">Nothing asked yet.<br>Your list prints here.</div>
+      <div class="r-blank"></div><div class="r-blank"></div><div class="r-blank"></div><div class="r-blank"></div>
+      <hr class="r-rule"><div class="r-foot">Every line checked by a person.<br>Every doubt shown, never hidden.</div>`;
+    $("tillActions").hidden = true; return;
+  }
+  const {list, notes, relaxed, band} = dirResult;
+  const top = list.slice(0, RECEIPT_LINES);
+  const now = new Date();
+  const stamp = now.toLocaleDateString("en-US",{day:"2-digit",month:"short",year:"numeric"}).toUpperCase()
+    + "  " + now.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:false});
+  let doubtsShown = 0;
+  const items = top.map(d=>{
+    const r = receipts(d);
+    const lines = r.doubts.map(x => x.k==="age" ? `last checked ${r.age} months ago` : DOUBT_SHORT[x.k]);
+    doubtsShown += lines.length;
+    return `<div class="r-item"><div class="r-line"><button type="button" onclick="openDrawer('${d.id}')" title="Open ${esc(d.name)}">${esc(d.name)}</button><span class="r-chk">✓ ${shortMonth(d.lastVerified)}</span></div>`
+      + lines.map(t=>`<div class="r-doubt">trust less: ${esc(t)}</div>`).join("") + `</div>`;
+  }).join("");
+  el.innerHTML = `<div class="r-head"><div class="r-shop">MASS AI ATLAS</div><div class="r-meta">${esc(stamp)}</div>
+      <div class="r-q">“I need ${esc(askText)}”</div></div>
+    <hr class="r-rule">
+    ${top.length ? items : `<div class="r-empty">No organization in the Atlas offers all of that.<br>Drop a chip in the directory and ask again.</div>`}
+    <hr class="r-rule">
+    <div class="r-sum">
+      <div class="r-line"><span>ON THIS RECEIPT</span><span>${top.length} OF ${list.length}</span></div>
+      <div class="r-line"><span>CHECKED BY A PERSON</span><span>${top.filter(d=>d.lastVerified).length}/${top.length}</span></div>
+      <div class="r-line"><span>DOUBTS SHOWN</span><span>${doubtsShown}</span></div>
+    </div>
+    ${relaxed ? `<div class="r-note">None offer everything you asked for. These meet ${band}.</div>` : ""}
+    ${notes.filter(n=>!n.startsWith("Startups")).map(n=>`<div class="r-note">${esc(n)}</div>`).join("")}
+    <div class="r-bars" aria-hidden="true"></div>
+    <div class="r-foot">Flag, never delete.<br>Data: Mass AI Atlas, The Open Accelerator (CC BY 4.0)</div>`;
+  $("tillActions").hidden = !list.length;
+  $("tillOpen").textContent = list.length > top.length ? `See all ${list.length} in the directory` : "Open in the directory";
+  if(animate){ el.classList.remove("printing"); void el.offsetWidth; el.classList.add("printing"); }
+}
+function printReceipt(){
+  document.body.classList.add("receipt-print");
+  const done = () => { document.body.classList.remove("receipt-print"); window.removeEventListener("afterprint", done); };
+  window.addEventListener("afterprint", done);
+  window.print();
+}
 function applyAsk(text){
   text = (text||"").trim();
-  if(!text){ $("askHeard").textContent = ""; return; }
+  if(!text){ $("askHeard").textContent = ""; askText = ""; renderReceipt(false); return; }
+  askText = text;
+  fitAsk();
   const p = parseAsk(text);
   setAskFilters(p);
+  renderReceipt(true);
   const parts = p.needs.map(n=>`${OFFERS_META[n].icon} ${OFFERS_META[n].label}`);
   if(p.stage) parts.push(`Stage ${p.stage}: ${STAGES.find(s=>s.n===p.stage).t}`);
   $("askHeard").innerHTML = parts.length
-    ? `Understood as <b>${esc(parts.join(" · "))}</b>. Change the chips below if that's not right.`
-    : `Couldn't match that to a need. Pick from the chips below, or try words like “funding”, “GPUs”, “mentors”.`;
+    ? `Heard as <b>${esc(parts.join(", "))}</b>. Not right? Change the filters in the directory.`
+    : `That didn't match anything the Atlas tracks. Try words like funding, GPUs, mentors or customers.`;
 }
+renderReceipt(false);
+// the blank grows with the sentence; Enter asks, Shift+Enter is ignored (one line of intent)
+function fitAsk(){ const t = $("askInput"); t.style.height = "auto"; t.style.height = t.scrollHeight + "px"; }
+$("askInput").addEventListener("input", fitAsk);
+$("askInput").addEventListener("keydown", e=>{ if(e.key === "Enter"){ e.preventDefault(); applyAsk($("askInput").value); } });
+document.querySelectorAll(".ask-try button").forEach(b=>b.addEventListener("click", ()=>{
+  $("askInput").value = b.dataset.try; applyAsk(b.dataset.try);
+}));
+$("tillOpen").addEventListener("click", ()=>{
+  switchView("directory");
+  setTimeout(()=>$("dirCount").scrollIntoView({behavior:"smooth", block:"start"}), 60);
+});
 (function initVoice(){
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   const mic = $("askMic");
@@ -1844,7 +2150,8 @@ function applyAsk(text){
   const rec = new SR();
   rec.lang = "en-US"; rec.interimResults = true; rec.continuous = false;
   let live = false;
-  const setLive = on => { live = on; mic.classList.toggle("live", on); mic.setAttribute("aria-pressed", String(on)); };
+  const setLive = on => { live = on; mic.classList.toggle("live", on); mic.setAttribute("aria-pressed", String(on));
+    mic.querySelector(".ask-mic-txt").textContent = on ? "Listening… tap to stop" : "Say it"; };
   rec.onresult = e => {
     const said = [...e.results].map(r=>r[0].transcript).join(" ");
     $("askInput").value = said;
@@ -1860,7 +2167,7 @@ function applyAsk(text){
     try{ rec.start(); }catch(e){ setLive(false); }
   };
   mic.addEventListener("click", toggle);
-  document.addEventListener("keydown", e => { if(e.altKey && (e.key === "m" || e.key === "µ") && document.querySelector("#view-directory.active")){ e.preventDefault(); toggle(); } });
+  document.addEventListener("keydown", e => { if(e.altKey && (e.code === "KeyM")){ e.preventDefault(); toggle(); } });
 })();
 
 /* ---------- deep links (shareable URLs) ---------- */
@@ -1910,7 +2217,8 @@ function renderShortlist(ids){
     <div class="sl-row">
       <span class="lg-dot" style="color:${cColor(d.cat)};background:${cColor(d.cat)}"></span>
       <div class="sl-main"><a href="#" onclick="closeShortlist();openDrawer('${d.id}');return false"><b>${esc(d.name)}</b></a>
-        <span class="sl-sub">${cLabel(d.cat)} · ${esc(d.loc.split(",")[0])} · <span class="sl-url">${esc(d.url.replace(/^https:\/\/(www\.)?/,""))}</span></span></div>
+        <span class="sl-sub">${cLabel(d.cat)} · ${esc(d.loc.split(",")[0])} · <span class="sl-url">${esc(d.url.replace(/^https:\/\/(www\.)?/,""))}</span></span>
+        ${!sharedList && noteMap[d.id] ? `<span class="sl-note">✎ ${esc(noteMap[d.id])}</span>` : ""}</div>
       ${sharedList ? "" : `<button class="sl-x" aria-label="Remove ${esc(d.name)}" onclick="toggleStar('${d.id}')">✕</button>`}
     </div>`).join("") || `<p style="color:var(--muted)">Nothing saved yet — hit ☆ on any card or entry.</p>`;
   $("slTitle").textContent = sharedList ? "A shared shortlist" : "Your shortlist";
