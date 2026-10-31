@@ -279,14 +279,20 @@ html:not(.dark) .gx-search .map-results{background:rgba(10,15,30,.97);color:#e6e
 html:not(.dark) .rcpt-doubt{color:#b45309}
 /* ---------- warm top: the site header and tab bar read as paper, not night ---------- */
 :root{--warm:#f4efe4;--warm-2:#ebe3d3;--warm-ink:#1f1b16;--warm-muted:#625848;--warm-line:rgba(70,52,25,.14);--warm-accent:#7a5300}
-#site-header{background:var(--warm);border-bottom:1px solid var(--warm-line)}
-#site-header nav a{color:var(--warm-muted)}
-#site-header nav a:hover{color:var(--warm-ink)}
-#site-header button{color:var(--warm-ink);border-color:var(--warm-line);background:var(--warm-2)}
-#site-header button svg,#mobile-menu-btn{color:var(--warm-ink)}
-#site-header button:hover{border-color:#c79100}
-#newBanner{background:#f1e2bf;color:#5b3f00;border-color:rgba(122,83,0,.22)}
-#newBanner a,#newBanner button{color:#5b3f00}
+/* the hero and the counter are warm paper; the TOA site header above stays black,
+   matching the rest of the-open-accelerator.com */
+.hero,.counter{--bg:#f4efe4;--panel:#fffaf0;--panel2:#ebe3d3;--line:rgba(70,52,25,.14);
+  --text:#1f1b16;--muted:#5f5547;--gold-ink:#8a5a00;background:var(--bg);color:var(--text)}
+.counter{--bg:#ede5d5;--paper:#fbfaf6}
+.hero::before{background:radial-gradient(ellipse 60% 50% at 20% 30%,rgba(255,198,0,.16),transparent 60%),
+  radial-gradient(ellipse 50% 45% at 80% 20%,rgba(214,150,80,.12),transparent 60%),
+  radial-gradient(ellipse 45% 40% at 60% 90%,rgba(255,226,150,.18),transparent 60%)}
+.hero .brand h1 span{background:none;-webkit-text-fill-color:currentColor;color:#a06a00}
+.hero .stat b{background:linear-gradient(90deg,#1f1b16,#6b5134);-webkit-background-clip:text;background-clip:text}
+.counter .ask-input{border-bottom-color:#d9a400;caret-color:#a06a00}
+.counter .ask-input::placeholder{opacity:.5}
+.counter .receipt{box-shadow:0 18px 40px rgba(60,40,10,.22)}
+.counter .ask-mic:hover{border-color:#a08a68}
 .nav,html:not(.dark) .nav{background:rgba(244,239,228,.94);border-bottom:1px solid var(--warm-line)}
 .nav .tab{color:var(--warm-muted)}
 .nav .tab:hover{color:var(--warm-ink);background:rgba(122,83,0,.08)}
@@ -524,9 +530,9 @@ html:not(.dark) .tour-card p{color:#444}
 html:not(.dark) .new-tag{color:#b45309;border-color:rgba(180,83,9,.4)}
 html:not(.dark) .event-tag,html:not(.dark) .dr-event{color:#be185d;border-color:rgba(190,24,93,.35)}
 .new-banner{position:sticky;top:0;z-index:900;display:flex;gap:8px;align-items:center;justify-content:center;
-  padding:8px 40px;font-size:13.5px;background:rgba(255,198,0,.12);border-bottom:1px solid rgba(255,198,0,.3);color:#ffc600}
+  padding:8px 40px;font-size:13.5px;background:#27220f;border-bottom:1px solid rgba(255,198,0,.3);color:#ffc600}   /* solid: it sticks over the warm hero when you scroll */
 .new-banner a{color:#ffc600;text-decoration:underline}
-html:not(.dark) .new-banner{background:rgba(180,83,9,.08);border-color:rgba(180,83,9,.3);color:#b45309}
+html:not(.dark) .new-banner{background:#f8efe7;border-color:rgba(180,83,9,.3);color:#b45309}
 html:not(.dark) .new-banner a{color:#b45309}
 .nb-x{position:absolute;right:12px;background:none;border:none;color:inherit;cursor:pointer;font-size:14px}
 .modal{position:fixed;inset:0;z-index:9400;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:20px}
@@ -667,7 +673,7 @@ browse the <a href="e/">full organization index</a> or use the open dataset
 <header id="site-header" class="relative z-50 px-4 py-4 md:px-8 bg-white/90 dark:bg-dark-bg/95 backdrop-blur-md border-b border-gray-200 dark:border-white/10">
   <div class="max-w-7xl mx-auto flex justify-between items-center">
     <a href="https://the-open-accelerator.com/" class="flex items-center gap-3 z-50">
-      <img id="header-logo" src="https://the-open-accelerator.com/images/toa-black.png" alt="The Open Accelerator" class="h-10 w-auto">
+      <img id="header-logo" src="https://the-open-accelerator.com/images/toa-white.png" alt="The Open Accelerator" class="h-10 w-auto">
     </a>
     <nav class="hidden lg:flex items-center gap-5">
       <a href="https://the-open-accelerator.com/about-why.html" class="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white font-medium relative group transition-colors">About<span class="absolute bottom-0 left-0 w-0 group-hover:w-full h-0.5 bg-gold transition-all duration-300"></span></a>
@@ -2552,7 +2558,7 @@ document.addEventListener("keydown", e=>{ if(e.key === "Escape" && tourStep >= 0
 
   // Light/dark theme toggle (standard TOA header). Defaults to dark; persists the user's choice.
   var TOA_LOGO={dark:'https://the-open-accelerator.com/images/toa-white.png',light:'https://the-open-accelerator.com/images/toa-black.png'};
-  function updateLogos(theme){var h=document.getElementById('header-logo');if(h)h.src=TOA_LOGO.light;}   // the header is warm paper in both themes
+  function updateLogos(theme){var h=document.getElementById('header-logo');if(h)h.src=TOA_LOGO[theme]||TOA_LOGO.dark;}
   function toggleTheme(){
     var html=document.documentElement;
     var nowLight=html.classList.toggle('dark')===false; // toggle returns true if 'dark' now present
