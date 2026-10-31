@@ -50,6 +50,14 @@ All counts are computed in the browser from the same data the Atlas loads; none 
   result is a real Atlas entry with its own source.
 - **Never treats an empty `stages` on a startup as missing data.**
 
+## Merging this upstream
+
+The hero's "Watch the 75-second overview" button and "Read the one-page brief" link
+belong to the hackathon entry, not the Atlas. They live in one block marked
+`SHOWCASE-ONLY` in `index.html` and **hide themselves on the-open-accelerator.com**,
+so the branch can be merged and deployed as is. To remove them entirely, delete that
+block, the `#videoDlg` dialog, and `initShowcase` / `initOverviewVideo`.
+
 ## Data sources
 
 - Mass AI Atlas dataset, The Open Accelerator — the-open-accelerator.com/ecosystem (CC BY 4.0),

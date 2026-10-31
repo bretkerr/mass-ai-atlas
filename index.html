@@ -311,7 +311,11 @@ html:not(.dark) .rcpt-doubt{color:#b45309}
   opacity:0;transition:opacity .8s ease}
 .hero-globe.ready{opacity:1}
 .hero-globe:active{cursor:grabbing}
-@media (min-width:901px){.hero-inner > :not(.hero-globe):not(.hero-video-btn){max-width:calc(100% - var(--globe) + 10px)}}
+@media (min-width:901px){.hero-inner > :not(.hero-globe):not(.showcase-links){max-width:calc(100% - var(--globe) + 10px)}}
+.showcase-links{display:flex;flex-direction:column;align-items:center;gap:7px}
+.showcase-links[hidden]{display:none}
+.showcase-pdf{font-size:12px;color:var(--muted);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.showcase-pdf:hover,.showcase-pdf:focus-visible{color:var(--text);text-decoration-color:#ffc600}
 /* the overview video: a quiet pill under the globe; inline under the buttons on phones */
 .hero-video-btn{display:inline-flex;align-items:center;gap:9px;font:600 13px/1 'Red Hat Display',system-ui,sans-serif;
   color:var(--text);background:rgba(255,240,215,.06);border:1px solid var(--line);border-radius:999px;padding:8px 14px 8px 9px;cursor:pointer;
@@ -320,8 +324,11 @@ html:not(.dark) .rcpt-doubt{color:#b45309}
 .hero-video-btn svg{width:22px;height:22px;flex:none}
 .hero-video-btn svg circle{fill:#ffc600}
 .hero-video-btn svg path{fill:#1f1b16}
-@media (min-width:901px){.hero-video-btn{position:absolute;right:calc(var(--globe)/2 - 10px);transform:translateX(50%);bottom:-16px;white-space:nowrap}}
-@media (max-width:900px){.hero-video-btn{margin-top:14px}}
+@media (min-width:901px){
+  .showcase-links{position:absolute;right:calc(var(--globe)/2 - 10px);transform:translateX(50%);bottom:-34px;white-space:nowrap}
+  .hero:has(.showcase-links:not([hidden])){padding-bottom:46px}   /* room for the brief link; normal padding when hidden */
+}
+@media (max-width:900px){.showcase-links{align-items:flex-start;margin-top:14px}}
 .video-dlg{margin:auto;inset:0;max-height:92vh;border:0;padding:0;background:#0c0b0a;border-radius:14px;width:min(1100px,92vw);overflow:visible;box-shadow:0 30px 80px rgba(0,0,0,.6)}
 .video-dlg::backdrop{background:rgba(10,8,5,.78);backdrop-filter:blur(3px)}
 .video-dlg video{display:block;width:100%;height:auto;border-radius:14px 14px 0 0;background:#000;aspect-ratio:16/9}
@@ -848,10 +855,17 @@ browse the <a href="e/">full organization index</a> or use the open dataset
 
     </div>
 
-    <button type="button" class="hero-video-btn" id="heroVideoBtn" aria-haspopup="dialog">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="M10 8l6 4-6 4z"/></svg>
-      <span>Watch the 75-second overview</span>
-    </button>
+    <!-- SHOWCASE-ONLY: links to the hackathon entry's video and one-page brief.
+         They hide themselves on the-open-accelerator.com (see initShowcase), so this
+         can be merged and deployed as is. To remove them for good, delete this
+         <div>, the #videoDlg <dialog> and initShowcase / initOverviewVideo. -->
+    <div class="showcase-links" id="showcaseLinks">
+      <button type="button" class="hero-video-btn" id="heroVideoBtn" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="M10 8l6 4-6 4z"/></svg>
+        <span>Watch the 75-second overview</span>
+      </button>
+      <a class="showcase-pdf" href="https://pub-bcdb3a688294470c8056f904d7e6236b.r2.dev/redhat-atlas/Receipts-The-Claudettes-brief.pdf" target="_blank" rel="noopener">Read the one-page brief (PDF) ↗</a>
+    </div>
     <div class="stats" id="stats"></div>
   </div>
 </header>
@@ -2657,6 +2671,15 @@ function rvRender(){
     frame(performance.now());   // first frame now, not on the next animation frame
   }
   if(document.readyState === "complete") setTimeout(start, 300); else addEventListener("load", ()=>setTimeout(start, 300));
+})();
+
+/* ---------- showcase links: only off the org's own domain ----------
+   The video and brief belong to the hackathon entry, not to the Atlas, so they
+   never show on the-open-accelerator.com. Elsewhere (localhost, a fork, a
+   personal showcase) they appear. */
+(function initShowcase(){
+  const box = $("showcaseLinks"); if(!box) return;
+  if(/(^|\.)the-open-accelerator\.com$/i.test(location.hostname)) box.hidden = true;
 })();
 
 /* ---------- overview video: opens in a dialog, pauses when closed ---------- */
