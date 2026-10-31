@@ -2,7 +2,7 @@
 
 **Team:** The Claudettes · **Project:** Receipts · **Track:** B (UX) · **Hackathon:** Chart the Common Wealth, The Open Accelerator × Red Hat, 31 Oct 2026
 
-**Demo video (75 s):** https://youtu.be/VRSNQxPLBDM · **Repo:** https://github.com/bretkerr/mass-ai-atlas/tree/receipts
+**Try it live:** https://bretkerr.github.io/mass-ai-atlas/ · **Demo video (75 s):** https://youtu.be/VRSNQxPLBDM · **Repo:** https://github.com/bretkerr/mass-ai-atlas/tree/receipts
 
 A founder says what they need. The Atlas answers with a receipt: who's on the list,
 the month a person last checked each one, and what to doubt. Doubt is shown, never hidden.
