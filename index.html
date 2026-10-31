@@ -306,12 +306,28 @@ html:not(.dark) .rcpt-doubt{color:#b45309}
   --text:#1f1b16;--muted:#5f5547;--gold-ink:#8a5a00;background:var(--bg);color:var(--text)}
 .counter{--bg:#ede5d5;--paper:#fbfaf6}
 /* the globe: right of the hero copy, decorative (aria-hidden), desktop only */
-.hero{--globe:clamp(220px,26vw,340px)}
-.hero-globe{position:absolute;right:-10px;top:50%;transform:translateY(-50%);width:var(--globe);height:var(--globe);cursor:grab;touch-action:none;
+.hero{--globe:clamp(190px,18vw,230px)}
+.hero-globe{position:absolute;right:-10px;top:-8px;width:var(--globe);height:var(--globe);cursor:grab;touch-action:none;
   opacity:0;transition:opacity .8s ease}
 .hero-globe.ready{opacity:1}
 .hero-globe:active{cursor:grabbing}
-@media (min-width:901px){.hero-inner > :not(.hero-globe){max-width:calc(100% - var(--globe) + 10px)}}
+@media (min-width:901px){.hero-inner > :not(.hero-globe):not(.hero-video-btn){max-width:calc(100% - var(--globe) + 10px)}}
+/* the overview video: a quiet pill under the globe; inline under the buttons on phones */
+.hero-video-btn{display:inline-flex;align-items:center;gap:9px;font:600 13px/1 'Red Hat Display',system-ui,sans-serif;
+  color:var(--text);background:rgba(255,240,215,.06);border:1px solid var(--line);border-radius:999px;padding:8px 14px 8px 9px;cursor:pointer;
+  transition:border-color .15s,background .15s}
+.hero-video-btn:hover,.hero-video-btn:focus-visible{border-color:#ffc600;background:rgba(255,198,0,.10)}
+.hero-video-btn svg{width:22px;height:22px;flex:none}
+.hero-video-btn svg circle{fill:#ffc600}
+.hero-video-btn svg path{fill:#1f1b16}
+@media (min-width:901px){.hero-video-btn{position:absolute;right:calc(var(--globe)/2 - 10px);transform:translateX(50%);bottom:-16px;white-space:nowrap}}
+@media (max-width:900px){.hero-video-btn{margin-top:14px}}
+.video-dlg{margin:auto;inset:0;max-height:92vh;border:0;padding:0;background:#0c0b0a;border-radius:14px;width:min(1100px,92vw);overflow:visible;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.video-dlg::backdrop{background:rgba(10,8,5,.78);backdrop-filter:blur(3px)}
+.video-dlg video{display:block;width:100%;height:auto;border-radius:14px 14px 0 0;background:#000;aspect-ratio:16/9}
+.video-note{margin:0;padding:9px 14px 11px;font-size:12px;color:#c4baa9}
+.video-close{position:absolute;top:-14px;right:-14px;width:34px;height:34px;border-radius:50%;border:0;cursor:pointer;
+  background:#f4efe4;color:#1f1b16;font-size:15px;box-shadow:0 4px 14px rgba(0,0,0,.4);z-index:2}
 @media (max-width:900px){.hero-globe{display:none}}
 /* the hero steps down from the black header to a warm graphite, so the ivory
    counter and the daylight map below read as distinct bands */
@@ -750,6 +766,12 @@ browse the <a href="e/">full organization index</a> or use the open dataset
   </div>
 </div>
 
+<dialog class="video-dlg" id="videoDlg" aria-label="Receipts overview video">
+  <button type="button" class="video-close" aria-label="Close video" onclick="document.getElementById('videoDlg').close()">✕</button>
+  <video id="overviewVideo" controls playsinline preload="none" poster=""
+    src="https://pub-bcdb3a688294470c8056f904d7e6236b.r2.dev/redhat-atlas/receipts-mass-ai-atlas.mp4"></video>
+  <p class="video-note">Captions are burned in. Narration is an AI voice; the screens are the working build.</p>
+</dialog>
 <div id="cmpBar" class="cmp-bar" style="display:none">
   <span id="cmpBarText">Pick one more to compare</span>
   <button class="btn btn-pri" id="cmpBarGo" onclick="openCompare()" hidden>Compare</button>
@@ -826,6 +848,10 @@ browse the <a href="e/">full organization index</a> or use the open dataset
 
     </div>
 
+    <button type="button" class="hero-video-btn" id="heroVideoBtn" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="M10 8l6 4-6 4z"/></svg>
+      <span>Watch the 75-second overview</span>
+    </button>
     <div class="stats" id="stats"></div>
   </div>
 </header>
@@ -2631,6 +2657,15 @@ function rvRender(){
     frame(performance.now());   // first frame now, not on the next animation frame
   }
   if(document.readyState === "complete") setTimeout(start, 300); else addEventListener("load", ()=>setTimeout(start, 300));
+})();
+
+/* ---------- overview video: opens in a dialog, pauses when closed ---------- */
+(function initOverviewVideo(){
+  const btn = $("heroVideoBtn"), dlg = $("videoDlg"), v = $("overviewVideo");
+  if(!btn || !dlg || !v) return;
+  btn.addEventListener("click", ()=>{ dlg.showModal(); v.play().catch(()=>{}); });
+  dlg.addEventListener("close", ()=>{ v.pause(); btn.focus(); });
+  dlg.addEventListener("click", e=>{ if(e.target === dlg) dlg.close(); });   // click the backdrop to close
 })();
 
 /* ---------- the 30-second welcome (AI voice, captioned line by line) ---------- */
