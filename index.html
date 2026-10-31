@@ -198,6 +198,17 @@ html:not(.dark) .gx-search .map-results{background:rgba(10,15,30,.97);color:#e6e
 .rcpt-src{color:var(--gold-ink)}
 .rcpt-doubt{margin-top:4px;color:#fbbf24}
 html:not(.dark) .rcpt-doubt{color:#b45309}
+.ask{margin:0 0 16px;padding:14px 16px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
+.ask-label{display:block;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.ask-row{display:flex;gap:8px;align-items:center}
+.ask-input{flex:1;min-width:0;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:11px 12px;font:inherit;font-size:15px}
+.ask-mic{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--panel2);font-size:19px;cursor:pointer}
+.ask-mic.live{border-color:#f87171;box-shadow:0 0 0 4px rgba(248,113,113,.25);animation:askPulse 1.2s ease-in-out infinite}
+@keyframes askPulse{50%{box-shadow:0 0 0 8px rgba(248,113,113,.08)}}
+@media (prefers-reduced-motion: reduce){.ask-mic.live{animation:none}}
+.ask-go{flex:none}
+.ask-heard{font-size:13px;color:var(--muted);margin-top:8px;min-height:1em}
+.ask-heard b{color:var(--text);font-weight:600}
 .dir-note{font-size:12.5px;color:var(--muted);margin:-4px 0 12px;display:flex;flex-direction:column;gap:3px}
 .cmp-table a{color:var(--gold-ink)}
 .cmp-verdict{margin:12px 0 0;padding:10px 12px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);font-size:13.5px}
@@ -581,6 +592,18 @@ browse the <a href="e/">full organization index</a> or use the open dataset
 </section>
 
 <section id="view-directory" class="view">
+  <!-- Ask: say or type a founder's need. It only ever sets the filters below,
+       which stay visible and editable — it never names an organization. -->
+  <form class="ask" id="askForm" onsubmit="event.preventDefault();applyAsk($('askInput').value)">
+    <label class="ask-label" for="askInput">Tell the Atlas what you need</label>
+    <div class="ask-row">
+      <input class="ask-input" id="askInput" type="text" autocomplete="off"
+        placeholder="e.g. “pre-seed money and GPUs for a robotics startup”">
+      <button type="button" class="ask-mic" id="askMic" aria-pressed="false" title="Speak your question (Alt+M)" aria-label="Speak your question">🎙</button>
+      <button type="submit" class="btn btn-pri ask-go">Find</button>
+    </div>
+    <div class="ask-heard" id="askHeard" role="status" aria-live="polite"></div>
+  </form>
   <div class="dir-controls">
     <input class="dir-search" id="dirSearch" type="text" placeholder="Search by name, tag, or keyword…">
     <select class="dir-select" id="dirStage" aria-label="Filter by founder stage">
@@ -1643,7 +1666,7 @@ let dirOpenOnly = false;      // ⏳ hard constraint: is this org accepting appl
     .concat([["open","⏳ Open to apply now"]]);
   needs.forEach(([key, label])=>{
     const el = document.createElement("button");
-    el.className = "need-chip"; el.type = "button"; el.textContent = label;
+    el.className = "need-chip"; el.type = "button"; el.textContent = label; el.dataset.need = key;
     el.setAttribute("aria-pressed","false");
     el.addEventListener("click", ()=>{
       let on;
@@ -1765,6 +1788,80 @@ function renderCards(){
   }).join("") || `<div style="color:var(--muted)">No matches — try clearing filters, or <a href="#" onclick="suggestEntry();return false" style="color:#ffc600">suggest a new entry</a>.</div>`;
 }
 renderCards();
+
+/* ---------- ask: a founder's words → the filters above ----------
+   Plain keyword rules, so it works with no key and no network. It only ever
+   sets the existing "I need…" chips and stage; it never picks an organization,
+   so every result is still a real entry with its own receipts. */
+const ASK_NEEDS = {
+  funding:    /\b(fund(ing|s)?|money|invest(or|ors|ment)?|capital|vcs?|raise|raising|check|round|pre-?seed|seed)\b/,
+  grants:     /\b(grants?|equity[- ]free|non-?dilutive|prizes?|free money)\b/,
+  space:      /\b(space|office|desk|lab space|co-?working|workspace)\b/,
+  compute:    /\b(gpus?|compute|cloud|credits|hpc|servers?)\b/,
+  mentorship: /\b(mentors?|mentorship|advice|advisors?|coach(ing)?|guidance|feedback)\b/,
+  community:  /\b(community|meetups?|network(ing)?|peers|events?)\b/,
+  talent:     /\b(hire|hiring|talent|engineers?|interns?|recruit(ing)?|co-?founders?|team)\b/,
+  customers:  /\b(customers?|pilots?|buyers?|sales|design partners?|enterprise)\b/,
+};
+const ASK_STAGES = [
+  [1, /\b(curious|new to|learn(ing)?|getting started|just starting)\b/],
+  [2, /\b(idea|validate|validating|test(ing)? the idea|feedback)\b/],
+  [3, /\b(prototype|mvp|build(ing)?|cofounder|co-founder)\b/],
+  [4, /\b(pre-?seed|seed|first round|raise|raising)\b/],
+  [5, /\b(scale|scaling|grow(ing|th)?|series [abc])\b/],
+];
+function parseAsk(text){
+  const t = " " + text.toLowerCase() + " ";
+  const needs = Object.keys(ASK_NEEDS).filter(k=>ASK_NEEDS[k].test(t));
+  const hit = ASK_STAGES.filter(([,re])=>re.test(t)).map(([n])=>n);
+  return {needs, stage: hit.length ? Math.max(...hit) : null};
+}
+function setAskFilters({needs, stage}){
+  dirNeeds.clear(); needs.forEach(n=>dirNeeds.add(n));
+  document.querySelectorAll(".need-chip[data-need]").forEach(el=>{
+    if(el.dataset.need === "open") return;
+    const on = dirNeeds.has(el.dataset.need);
+    el.classList.toggle("on", on); el.setAttribute("aria-pressed", String(on));
+  });
+  $("dirStage").value = stage ? String(stage) : "";
+  renderCards();
+}
+function applyAsk(text){
+  text = (text||"").trim();
+  if(!text){ $("askHeard").textContent = ""; return; }
+  const p = parseAsk(text);
+  setAskFilters(p);
+  const parts = p.needs.map(n=>`${OFFERS_META[n].icon} ${OFFERS_META[n].label}`);
+  if(p.stage) parts.push(`Stage ${p.stage}: ${STAGES.find(s=>s.n===p.stage).t}`);
+  $("askHeard").innerHTML = parts.length
+    ? `Understood as <b>${esc(parts.join(" · "))}</b>. Change the chips below if that's not right.`
+    : `Couldn't match that to a need. Pick from the chips below, or try words like “funding”, “GPUs”, “mentors”.`;
+}
+(function initVoice(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const mic = $("askMic");
+  if(!SR){ mic.style.display = "none"; return; }   // typing always works
+  const rec = new SR();
+  rec.lang = "en-US"; rec.interimResults = true; rec.continuous = false;
+  let live = false;
+  const setLive = on => { live = on; mic.classList.toggle("live", on); mic.setAttribute("aria-pressed", String(on)); };
+  rec.onresult = e => {
+    const said = [...e.results].map(r=>r[0].transcript).join(" ");
+    $("askInput").value = said;
+    if(e.results[e.results.length-1].isFinal) applyAsk(said);
+  };
+  rec.onend = () => setLive(false);
+  rec.onerror = e => { setLive(false); $("askHeard").textContent =
+    e.error === "not-allowed" ? "Microphone blocked. Allow it in the address bar, or type instead." : "Didn't catch that. Try again, or type it."; };
+  const toggle = () => {
+    if(live){ rec.stop(); return; }
+    $("askInput").value = ""; setLive(true);
+    $("askHeard").textContent = "Listening… your browser's speech service turns this into text.";
+    try{ rec.start(); }catch(e){ setLive(false); }
+  };
+  mic.addEventListener("click", toggle);
+  document.addEventListener("keydown", e => { if(e.altKey && (e.key === "m" || e.key === "µ") && document.querySelector("#view-directory.active")){ e.preventDefault(); toggle(); } });
+})();
 
 /* ---------- deep links (shareable URLs) ---------- */
 let drawerId = null;
