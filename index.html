@@ -267,9 +267,15 @@ html:not(.dark) .gx-search .map-results{background:rgba(10,15,30,.97);color:#e6e
 .pf.big .pf-full{display:block}
 .pf.big .pf-short{display:none}
 .pf-offers{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px;margin-bottom:6px}
-.pop-flip .leaflet-popup-tip{background:var(--panel)}
+/* warm tiles: the front matches the warm hero; the back is already receipt paper */
+.pf-front{--panel:#f4efe4;--panel2:#ebe3d3;--line:rgba(70,52,25,.16);--text:#1f1b16;--muted:#5f5547;--gold-ink:#8a5a00;
+  background:var(--panel);color:var(--text);border-color:rgba(70,52,25,.12);box-shadow:0 14px 34px rgba(30,20,5,.35)}
+.pf-front .pop-cat{color:#6b5134!important}
+.pf-front .pf-tool{border-color:rgba(70,52,25,.35)}
+.pf-front .pf-star[aria-pressed="true"]{color:#a06a00}
+.pop-flip .leaflet-popup-tip{background:#f4efe4}
 .pop-flip:has(.pf.flipped) .leaflet-popup-tip{background:#f7f7f2}
-.pop-flip .leaflet-popup-close-button{z-index:3;color:var(--muted)!important}
+.pop-flip .leaflet-popup-close-button{z-index:3;color:#5f5547!important}
 .pop-flip:has(.pf.flipped) .leaflet-popup-close-button{color:#5e5c66!important}
 @media (prefers-reduced-motion: reduce){.pf-card,.pf{transition:none}}
 .rcpt{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-size:12px;color:var(--muted);line-height:1.5}
@@ -304,13 +310,48 @@ html:not(.dark) .rcpt-doubt{color:#b45309}
 .nav .nav-gh{color:var(--warm-muted);border-color:var(--warm-line)}
 .nav .nav-gh:hover{color:var(--warm-ink);border-color:rgba(122,83,0,.4);background:rgba(199,145,0,.1)}
 
+/* ---------- review proposals ---------- */
+.rv-intro h2{font-size:24px;font-weight:800;letter-spacing:-.01em}
+.rv-intro p{color:var(--muted);max-width:68ch;margin-top:6px;line-height:1.55}
+.rv-load{margin:18px 0 14px;display:flex;flex-direction:column;gap:10px}
+.rv-drop{display:block;border:1.5px dashed var(--line);border-radius:14px;padding:22px;cursor:pointer;color:var(--muted);text-align:center}
+.rv-drop:hover,.rv-drop.over{border-color:var(--gold);color:var(--text)}
+.rv-drop input{position:absolute;opacity:0;width:1px;height:1px}
+.rv-drop:focus-within{outline:2px solid var(--gold-ink);outline-offset:2px}
+.rv-paste summary{cursor:pointer;color:var(--muted);font-size:13px}
+.rv-paste textarea{width:100%;margin:8px 0;font:12.5px/1.5 ui-monospace,Menlo,monospace;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px}
+.rv-sum{display:flex;gap:18px;flex-wrap:wrap;align-items:baseline;margin:6px 0 14px;font-size:14px;color:var(--muted)}
+.rv-sum b{color:var(--text);font-size:20px;margin-right:4px}
+.rv-sum .rv-sum-flag b{color:#fbbf24}
+html:not(.dark) .rv-sum .rv-sum-flag b{color:#b45309}
+.rv-sum label{margin-left:auto;font-size:13px;display:flex;gap:6px;align-items:center;cursor:pointer}
+.rv-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px}
+.pr{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.pr.flag{border-color:rgba(251,191,36,.55);box-shadow:inset 4px 0 0 #fbbf24}
+html:not(.dark) .pr.flag{border-color:rgba(180,83,9,.45);box-shadow:inset 4px 0 0 #b45309}
+.pr-top{display:flex;gap:10px;align-items:flex-start}
+.pr-top .logo{margin-top:2px}
+.pr-name{font-weight:700;font-size:15px}
+.pr-meta{font-size:12px;color:var(--muted)}
+.pr-state{margin-left:auto;flex:none;font-size:11.5px;font-weight:700;border-radius:999px;padding:4px 9px;white-space:nowrap}
+.pr.flag .pr-state{background:rgba(251,191,36,.14);color:#fbbf24}
+html:not(.dark) .pr.flag .pr-state{background:rgba(180,83,9,.1);color:#b45309}
+.pr.ok .pr-state{color:var(--muted);border:1px solid var(--line)}
+.pr-flags{list-style:none;margin:2px 0 0;padding:0;display:flex;flex-direction:column;gap:3px}
+.pr-flags li{font-size:13px;color:#fbbf24;padding-left:18px;position:relative}
+html:not(.dark) .pr-flags li{color:#b45309}
+.pr-flags li::before{content:"⚠";position:absolute;left:0}
+.pr-flags li a{color:inherit}
+.pr-notes{font-size:12px;color:var(--muted);line-height:1.5}
+.pr-notes a{color:var(--gold-ink)}
+
 /* ---------- the counter: ask → receipt ---------- */
 .counter{--paper:#f7f7f2;--ink:#17161c;--ink2:#5e5c66;--doubt:#b45309;
   border-bottom:1px solid var(--line);padding:40px 28px 36px;position:relative;overflow:hidden}
 .counter-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:64px;align-items:center}
 .ask{min-width:0}
 .ask-sentence{display:flex;flex-wrap:wrap;align-items:baseline;gap:.25em .35em;font-weight:800;
-  font-size:clamp(34px,5.4vw,68px);line-height:1.02;letter-spacing:-.035em;color:var(--text);cursor:text}
+  font-size:clamp(30px,4.05vw,51px);line-height:1.04;letter-spacing:-.03em;color:var(--text);cursor:text}
 .ask-lead{flex:none}
 .ask-input{flex:1 1 7em;min-width:0;resize:none;overflow:hidden;display:block;font:inherit;letter-spacing:inherit;color:var(--text);background:none;border:0;
   border-bottom:.07em solid var(--gold);border-radius:0;padding:0 0 .04em;outline:none;caret-color:var(--gold)}
@@ -605,6 +646,8 @@ html:not(.dark) .dr-verified.stale,html:not(.dark) .stale-tag{color:#b45309;bord
 .partners img{height:30px;width:auto;display:block;opacity:1;transition:.15s}
 .partners a:hover img{transform:translateY(-1px)}
 .partners img.ibm{height:24px;filter:none}
+/* this Red Hat file is the reverse (white wordmark) version: flip lightness, keep the red */
+.partners img[alt="Red Hat"]{filter:invert(1) hue-rotate(180deg) saturate(9) brightness(.72) contrast(1.2)}
 html:not(.dark) .partners{box-shadow:0 0 0 1px rgba(15,23,42,.1)}
 @media(max-width:520px){.partners{gap:18px;padding:12px 16px}.partners img{height:24px}.partners img.ibm{height:19px}}
 .toa-links{margin-bottom:14px}
@@ -795,6 +838,7 @@ browse the <a href="e/">full organization index</a> or use the open dataset
     <button class="tab" data-view="galaxy"><span class="ico">✨</span>Galaxy</button>
     <button class="tab" data-view="journey"><span class="ico">🧭</span>Founder Journey</button>
     <button class="tab" data-view="directory"><span class="ico">📇</span>Directory</button>
+    <button class="tab" data-view="review"><span class="ico">🧾</span>Review proposals</button>
     <div class="nav-spacer"></div>
     <button class="tab" id="starNav" style="display:none" title="Your saved shortlist" onclick="openShortlist()">★ <span id="starCount">0</span></button>
     <button class="tab suggest" id="suggestBtn" title="Propose a new organization for the atlas">➕ Suggest an entry</button>
@@ -861,6 +905,27 @@ browse the <a href="e/">full organization index</a> or use the open dataset
   <div class="dir-count" id="dirCount" role="status" aria-live="polite"></div>
   <div class="dir-note" id="dirNote"></div>
   <div class="cards" id="cards"></div>
+</section>
+
+<!-- Review proposals: a maintainer's screen for incoming entries. It flags,
+     with a reason, and never accepts, rejects or edits anything. -->
+<section id="view-review" class="view">
+  <div class="rv-intro">
+    <h2>Review proposed entries</h2>
+    <p>Load a file of proposed organizations. Each one is checked against the Atlas and gets a plain reason for anything worth a second look. Nothing here accepts, rejects or changes an entry: a person decides.</p>
+  </div>
+  <form class="rv-load" id="rvForm" onsubmit="event.preventDefault();rvRun($('rvText').value)">
+    <label class="rv-drop" id="rvDrop">
+      <input type="file" id="rvFile" accept=".json,.yml,.yaml,.csv,application/json,text/csv,text/yaml">
+      <span><b>Drop a file here</b> or choose one. JSON, YAML or CSV, in the Atlas's own entry format.</span>
+    </label>
+    <details class="rv-paste"><summary>Or paste entries</summary>
+      <textarea id="rvText" rows="6" spellcheck="false" placeholder='[{"id":"…","name":"…","cat":"vc","loc":"Cambridge","lat":42.36,"lng":-71.09,"url":"https://…","desc":"…","offers":["funding"]}]'></textarea>
+      <button type="submit" class="btn btn-pri">Check these</button>
+    </details>
+  </form>
+  <div class="rv-sum" id="rvSum" role="status" aria-live="polite"></div>
+  <div class="rv-list" id="rvList"></div>
 </section>
 
 <div class="overlay" id="overlay"></div>
@@ -2258,6 +2323,135 @@ $("tillOpen").addEventListener("click", ()=>{
   document.addEventListener("keydown", e => { if(e.altKey && (e.code === "KeyM")){ e.preventDefault(); toggle(); } });
 })();
 
+/* ---------- review proposals: six checks, each with its reason ----------
+   Flags only. A false positive costs a maintainer two minutes; a missed bad
+   entry costs the Atlas its credibility. So: when unsure, flag, and say why. */
+const MA_BOX = {s:41.18, n:42.90, w:-73.52, e:-69.85};
+const NEAR_STATES = /\b(rhode island|providence|new hampshire|nashua|manchester|portsmouth|connecticut|hartford|new haven|stamford|new york|nyc|brooklyn|vermont|burlington|maine|portland,? me)\b|,\s*(ri|nh|ct|ny|vt|me)\b/i;
+const CLOSED = /\b(closed|shut ?down|ceased|defunct|wound down|winding down|no longer (operat|active)|acquired by|sunset(ted)?|discontinued)\b/i;
+const ODD_TLD = /\.(xyz|top|site|online|club|biz|click|buzz|icu|monster|rest|shop)$/i;
+const RISKY_FACT = /^(check size|equity|terms|board seat)$/i;
+const normName = n => (n||"").toLowerCase().replace(/\(.*?\)/g," ").replace(/&/g," and ").replace(/[^a-z0-9 ]+/g," ")
+  .replace(/\b(the|inc|llc|co|corp|corporation|company|ltd)\b/g," ").replace(/\s+/g," ").trim();
+const hostOf = u => { try{ return new URL(u).hostname.replace(/^www\./,"").toLowerCase(); }catch(e){ return ""; } };
+const kmBetween = (a,b,c,d) => metresBetween(a,b,c,d)/1000;
+// where each town actually is, from the Atlas's own exact pins
+const TOWNS = (()=>{ const acc = {};
+  DATA.filter(d=>!d.approx).forEach(d=>{ const t = d.loc.split(",").pop().trim().toLowerCase(); (acc[t] = acc[t] || []).push([d.lat,d.lng]); });
+  return Object.fromEntries(Object.entries(acc).map(([t,ps])=>[t,[ps.reduce((s,p)=>s+p[0],0)/ps.length, ps.reduce((s,p)=>s+p[1],0)/ps.length]]));
+})();
+function similarity(a, b){
+  const A = new Set(normName(a).split(" ").filter(Boolean)), B = new Set(normName(b).split(" ").filter(Boolean));
+  if(!A.size || !B.size) return 0;
+  let n = 0; A.forEach(w=>{ if(B.has(w)) n++; });
+  return n / Math.max(A.size, B.size);
+}
+function checkProposal(p){
+  const flags = [], notes = [];
+  // 0. the contract: required fields
+  const missing = ["id","name","cat","loc","lat","lng","url","desc","offers"].filter(k=>p[k]===undefined || p[k]===null || p[k]==="");
+  if(missing.length) flags.push(`Missing required field${missing.length>1?"s":""}: ${missing.join(", ")}`);
+  const lat = +p.lat, lng = +p.lng, hasXY = isFinite(lat) && isFinite(lng) && p.lat !== "" && p.lng !== "";
+  // 1. duplicate
+  const host = hostOf(p.url);
+  const dupe = DATA.find(d => d.id === p.id) || DATA.find(d => host && hostOf(d.url) === host)
+            || DATA.map(d=>[d, similarity(d.name, p.name)]).filter(([,s])=>s >= .75).sort((a,b)=>b[1]-a[1]).map(([d])=>d)[0];
+  if(dupe) flags.push({html:`Looks like an existing entry: <a href="#" onclick="openDrawer('${dupe.id}');return false">${esc(dupe.name)}</a>${dupe.id===p.id?" (same id)":host && hostOf(dupe.url)===host?" (same website)":" (similar name)"}`});
+  // 2. out of state
+  // the box, then the real borders it overlaps: RI and CT sit below ~42.02°N west of
+  // Fall River; NH sits above ~42.70°N west of the Merrimack's mouth
+  const outBox = hasXY && (lat < MA_BOX.s || lat > MA_BOX.n || lng < MA_BOX.w || lng > MA_BOX.e
+    || (lng < -71.38 && lat < 42.0) || (lng < -71.25 && lat > 42.71) || (lng < -70.95 && lat > 42.86));
+  if(outBox || NEAR_STATES.test(p.loc||"")) flags.push(`Outside Massachusetts${p.loc ? ` (“${p.loc}”)` : ""}${outBox ? ": the pin is beyond the state line" : ""}`);
+  // 3. wrong place: pin far from the town it names
+  const town = (p.loc||"").split(",").pop().trim().toLowerCase();
+  if(hasXY && !outBox && TOWNS[town]){
+    const km = kmBetween(lat, lng, TOWNS[town][0], TOWNS[town][1]);
+    if(km > 8) flags.push(`Pin is ${Math.round(km)} km from ${p.loc.split(",").pop().trim()}, the town it names`);
+  } else if(hasXY && !outBox && town) notes.push(`No other entry is in “${town}”, so the pin can't be checked against the town.`);
+  // 4. closed or stale
+  if(CLOSED.test(p.desc||"") || CLOSED.test(p.why||"")) flags.push("The description says it closed, wound down or was acquired");
+  const age = monthsAgo(p.lastVerified);
+  if(age !== null && age > STALE_MONTHS) flags.push(`Last checked by a person ${age} months ago`);
+  if(!p.lastVerified) notes.push("No one has verified it yet (expected for a new proposal).");
+  // 5. unsourced fact
+  const risky = (p.facts||[]).filter(f => Array.isArray(f) && RISKY_FACT.test(f[0]));
+  const links = JSON.stringify([p.source, p.sources, p.sourceUrl, p.factSources, p.evidence, p.refs].filter(Boolean));
+  const hasSource = /https?:\/\/[^"\s]+/.test(links);
+  if(risky.length && !hasSource) flags.push(`${risky.map(f=>f[0]).join(" and ")} stated with no source link (“${risky[0][1]}”)`);
+  // 6. may not exist: a browser can't fetch the site, so look for the tell-tales and say what wasn't checked
+  if(host && ODD_TLD.test(host)) flags.push(`Website uses an unusual domain (${host}): check it isn't parked`);
+  if(host && p.name){
+    const words = normName(p.name).split(" ").filter(w=>w.length > 2);
+    if(words.length && !words.some(w => host.replace(/[^a-z0-9]/g,"").includes(w))) notes.push(`The website (${host}) doesn't contain the name. That's often fine; worth a look.`);
+  }
+  if(host) notes.push({html:`Website not checked from the browser: <a href="${esc(p.url)}" target="_blank" rel="noopener">open ${esc(host)} ↗</a> to confirm it's live.`});
+  return {flags, notes};
+}
+let rvItems = [], rvFlaggedFirst = true;
+function parseProposals(text){
+  text = (text||"").trim(); if(!text) return [];
+  let data;
+  if(/^[\[{]/.test(text)) data = JSON.parse(text);
+  else if(/^[^\n]*\bname\b[^\n]*,/i.test(text) && !/^\s*-\s/.test(text)) data = parseCSV(text);
+  else data = jsyaml.load(text);
+  if(data && !Array.isArray(data)) data = data.data || data.entities || data.proposals || data.entries || [data];
+  return (data||[]).filter(x => x && typeof x === "object");
+}
+function parseCSV(text){
+  const rows = []; let row = [], cell = "", q = false;
+  for(let i=0;i<text.length;i++){
+    const c = text[i];
+    if(q){ if(c === '"' && text[i+1] === '"'){ cell += '"'; i++; } else if(c === '"') q = false; else cell += c; }
+    else if(c === '"') q = true;
+    else if(c === ","){ row.push(cell); cell = ""; }
+    else if(c === "\n" || c === "\r"){ if(c === "\r" && text[i+1] === "\n") i++; row.push(cell); rows.push(row); row = []; cell = ""; }
+    else cell += c;
+  }
+  if(cell || row.length){ row.push(cell); rows.push(row); }
+  const head = rows.shift().map(h=>h.trim());
+  const list = v => v ? v.split(/[;|]/).map(x=>x.trim()).filter(Boolean) : [];
+  return rows.filter(r=>r.some(Boolean)).map(r=>{
+    const o = {}; head.forEach((h,i)=>{ o[h] = (r[i]||"").trim(); });
+    ["offers","tags","links"].forEach(k=>{ if(typeof o[k]==="string") o[k] = list(o[k]); });
+    if(typeof o.stages==="string") o.stages = list(o.stages).map(Number);
+    if(typeof o.approx==="string") o.approx = /^(true|yes|1)$/i.test(o.approx);
+    if(typeof o.facts==="string" && o.facts) o.facts = list(o.facts).map(f=>f.split(/:\s*/));
+    return o;
+  });
+}
+function rvRun(text){
+  try{ rvItems = parseProposals(text).map(p=>({p, r:checkProposal(p)})); }
+  catch(e){ $("rvSum").textContent = `Couldn't read that file: ${e.message}. It should be JSON, YAML or CSV in the Atlas's entry format.`; $("rvList").innerHTML = ""; return; }
+  rvRender();
+}
+function rvRender(){
+  const flagged = rvItems.filter(x=>x.r.flags.length).length;
+  $("rvSum").innerHTML = rvItems.length ? `<span><b>${rvItems.length}</b>proposals</span><span class="rv-sum-flag"><b>${flagged}</b>need a closer look</span><span><b>${rvItems.length-flagged}</b>look usable</span>
+    <label><input type="checkbox" ${rvFlaggedFirst?"checked":""} onchange="rvFlaggedFirst=this.checked;rvRender()"> Flagged first</label>` : "No entries found in that file.";
+  const order = rvFlaggedFirst ? [...rvItems].sort((a,b)=>(b.r.flags.length>0)-(a.r.flags.length>0)) : rvItems;
+  const fmt = x => typeof x === "string" ? esc(x) : x.html;
+  $("rvList").innerHTML = order.map(({p,r})=>{
+    const bad = r.flags.length > 0;
+    const d = {name:p.name||"(no name)", url:p.url||"", cat:CATS[p.cat] ? p.cat : "community"};
+    return `<article class="pr ${bad?"flag":"ok"}">
+      <div class="pr-top">${p.url ? logoHtml(d) : ""}<div><div class="pr-name">${esc(p.name||"(no name)")}</div>
+        <div class="pr-meta">${esc(CATS[p.cat]?cLabel(p.cat):(p.cat||"no category"))} · ${esc(p.loc||"no location")}</div></div>
+        <span class="pr-state">${bad ? `${r.flags.length} to check` : "No problems found"}</span></div>
+      ${bad ? `<ul class="pr-flags">${r.flags.map(f=>`<li>${fmt(f)}</li>`).join("")}</ul>` : ""}
+      <div class="pr-notes">${r.notes.map(fmt).join("<br>")}</div>
+    </article>`;
+  }).join("");
+}
+(function initReview(){
+  const drop = $("rvDrop"), file = $("rvFile");
+  const read = f => f && f.text().then(t=>{ $("rvText").value = t; rvRun(t); });
+  file.addEventListener("change", ()=>read(file.files[0]));
+  ["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev, e=>{ e.preventDefault(); drop.classList.add("over"); }));
+  ["dragleave","drop"].forEach(ev=>drop.addEventListener(ev, e=>{ e.preventDefault(); drop.classList.remove("over"); }));
+  drop.addEventListener("drop", e=>read(e.dataTransfer.files[0]));
+})();
+
 /* ---------- the 30-second welcome (AI voice, captioned line by line) ---------- */
 (function initWelcome(){
   const a = $("welcomeAudio"), b = $("welcomeBtn"), cap = $("welcomeCap"), lab = $("welcomeLabel");
@@ -2541,7 +2735,7 @@ document.addEventListener("keydown", e=>{ if(e.key === "Escape" && tourStep >= 0
   // deletes ?entry= while no drawer is open — so reading it afterwards found
   // nothing and a shared "?entry=<id>#directory" link silently lost its entry.
   const e = new URLSearchParams(location.search).get("entry");
-  if(["map","galaxy","journey","directory"].includes(h) && h !== currentView) switchView(h);
+  if(["map","galaxy","journey","directory","review"].includes(h) && h !== currentView) switchView(h);
   if(e && byId[e]) openDrawer(e);
 })();
 </script>
