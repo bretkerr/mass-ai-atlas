@@ -398,6 +398,11 @@ html:not(.dark) .pr-flags li{color:#b45309}
 /* ---------- daylight map: a warm light basemap and light panels in every theme ---------- */
 #view-map{--panel:#fbf8f2;--panel2:#efe8db;--line:rgba(70,52,25,.16);--text:#1f1b16;--muted:#5f5547;--gold-ink:#8a5a00;color:var(--text)}
 #view-map #map{background:#efe9dd}
+/* both footer bands in the hero's warm graphite, so the page is bookended */
+.footer,.site-footer{background:#34302b;--muted:#c4baa9;--line:rgba(255,240,215,.14)}
+.footer{color:#c4baa9}
+.site-footer{color:#c4baa9!important;border-top-color:rgba(255,240,215,.12)!important}
+.site-footer a{color:#d9cfbd}
 /* scroll gutters: the wheel scrolls the page over the margins and only moves the
    map when the pointer is on it */
 #view-map{padding:16px 100px 28px;background:#ede5d5}
@@ -1041,7 +1046,7 @@ browse the <a href="e/">full organization index</a> or use the open dataset
 </footer>
 
 <!-- ============ STANDARD TOA SITE FOOTER ============ -->
-<footer class="py-16 text-center text-gray-500 text-sm relative z-10 border-t border-white/10">
+<footer class="site-footer py-16 text-center text-gray-500 text-sm relative z-10 border-t border-white/10">
   <div class="max-w-7xl mx-auto px-4">
     <img src="https://the-open-accelerator.com/images/toa-white.png" alt="TOA Logo" class="h-8 mx-auto mb-8" loading="lazy">
     <div class="flex flex-wrap justify-center gap-x-8 gap-y-3 mb-8 font-medium">
