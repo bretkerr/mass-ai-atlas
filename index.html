@@ -361,6 +361,11 @@ html:not(.dark) .pr-flags li{color:#b45309}
 /* ---------- daylight map: a warm light basemap and light panels in every theme ---------- */
 #view-map{--panel:#fbf8f2;--panel2:#efe8db;--line:rgba(70,52,25,.16);--text:#1f1b16;--muted:#5f5547;--gold-ink:#8a5a00;color:var(--text)}
 #view-map #map{background:#efe9dd}
+/* scroll gutters: the wheel scrolls the page over the margins and only moves the
+   map when the pointer is on it */
+#view-map{padding:16px 100px 28px;background:#ede5d5}
+#view-map .map-wrap{height:calc(100vh - 120px);border-radius:16px;overflow:hidden;box-shadow:0 0 0 1px rgba(70,52,25,.14),0 16px 40px rgba(60,40,10,.14)}
+@media (max-width:900px){#view-map{padding:12px 16px 20px}}
 #view-map .maplibregl-canvas{filter:sepia(.16) saturate(1.06) brightness(1.01)}   /* positron, warmed toward paper */
 #view-map .map-legend{background:rgba(251,248,242,.95);border-color:var(--line);box-shadow:0 10px 30px rgba(60,40,10,.14)}
 #view-map .map-search input{background:rgba(251,248,242,.97);color:var(--text);box-shadow:0 6px 20px rgba(60,40,10,.12)}
