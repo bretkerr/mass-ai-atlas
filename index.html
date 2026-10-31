@@ -345,6 +345,23 @@ html:not(.dark) .pr-flags li{color:#b45309}
 .pr-notes{font-size:12px;color:var(--muted);line-height:1.5}
 .pr-notes a{color:var(--gold-ink)}
 
+/* ---------- daylight map: a warm light basemap and light panels in every theme ---------- */
+#view-map{--panel:#fbf8f2;--panel2:#efe8db;--line:rgba(70,52,25,.16);--text:#1f1b16;--muted:#5f5547;--gold-ink:#8a5a00;color:var(--text)}
+#view-map #map{background:#efe9dd}
+#view-map .maplibregl-canvas{filter:sepia(.16) saturate(1.06) brightness(1.01)}   /* positron, warmed toward paper */
+#view-map .map-legend{background:rgba(251,248,242,.95);border-color:var(--line);box-shadow:0 10px 30px rgba(60,40,10,.14)}
+#view-map .map-search input{background:rgba(251,248,242,.97);color:var(--text);box-shadow:0 6px 20px rgba(60,40,10,.12)}
+#view-map .map-results{background:rgba(251,248,242,.99)}
+#view-map .map-view-switch{background:rgba(251,248,242,.95);box-shadow:0 6px 20px rgba(60,40,10,.12)}
+#view-map .mv-btn:hover{background:rgba(122,83,0,.08)}
+#view-map .lg-item:hover{background:rgba(122,83,0,.08)}
+#view-map .cluster-chip{background:rgba(255,253,248,.97);color:#1f1b16;border-color:#d4462f;box-shadow:0 2px 10px rgba(212,70,47,.28)}
+/* pins on a light map: a crisp drop shadow instead of a neon glow, colours deepened a touch */
+#view-map .pulse-dot{box-shadow:0 1px 3px rgba(30,20,5,.45);border-color:#fff;filter:saturate(1.25) brightness(.9)}
+#view-map .approx-ring{filter:saturate(1.3) brightness(.82);background:color-mix(in srgb, currentColor 24%, transparent)}
+#view-map .map-zooming .pulse-dot,#view-map .map-zooming .approx-ring,#view-map .leaflet-zoom-anim .pulse-dot,#view-map .leaflet-zoom-anim .approx-ring{filter:none}
+#view-map .leaflet-control-attribution{background:rgba(251,248,242,.85);color:#5f5547}
+
 /* ---------- the counter: ask → receipt ---------- */
 .counter{--paper:#f7f7f2;--ink:#17161c;--ink2:#5e5c66;--doubt:#b45309;
   border-bottom:1px solid var(--line);padding:40px 28px 36px;position:relative;overflow:hidden}
@@ -1532,7 +1549,7 @@ const MAP_STYLES = {
 };
 const currentTheme = () => document.documentElement.classList.contains('dark') ? 'dark' : 'light';
 const makeBasemap = () => L.maplibreGL({
-  style: MAP_STYLES[currentTheme()],
+  style: MAP_STYLES.light,   // daylight basemap in both themes; the dark style stays in the repo, unused
   updateInterval: 16,   // redraw the vector basemap every frame while moving (default 32ms lags a pinch)
   attribution:'&copy; <a href="https://openfreemap.org">OpenFreeMap</a> &copy; <a href="https://www.openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 });
