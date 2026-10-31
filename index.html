@@ -193,6 +193,14 @@ html:not(.dark) .gx-search .map-results{background:rgba(10,15,30,.97);color:#e6e
 .approx-ring{width:22px;height:22px;border-radius:50%;border:2px dashed currentColor;box-sizing:border-box;
   background:color-mix(in srgb, currentColor 18%, transparent)}
 .pop-approx{font-size:12px;color:var(--muted);margin:4px 0 6px}
+.rcpt{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-size:12px;color:var(--muted);line-height:1.5}
+.rcpt-ok{color:var(--muted)}
+.rcpt-src{color:var(--gold-ink)}
+.rcpt-doubt{margin-top:4px;color:#fbbf24}
+html:not(.dark) .rcpt-doubt{color:#b45309}
+.dir-note{font-size:12.5px;color:var(--muted);margin:-4px 0 12px;display:flex;flex-direction:column;gap:3px}
+.cmp-table a{color:var(--gold-ink)}
+.cmp-verdict{margin:12px 0 0;padding:10px 12px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);font-size:13.5px}
 .lg-key{display:flex;flex-direction:column;gap:5px;margin-top:8px;padding-top:8px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
 .lg-key-row{display:flex;align-items:center;gap:8px}
 .lg-key-dot{width:11px;height:11px;border-radius:50%;background:var(--muted);flex:none}
@@ -579,6 +587,7 @@ browse the <a href="e/">full organization index</a> or use the open dataset
       <option value="">Any founder stage</option>
     </select>
     <select class="dir-select" id="dirSort" aria-label="Sort organizations">
+      <option value="sure" selected>Sort: Surest first</option>
       <option value="name">Sort: A → Z</option>
       <option value="cat">Sort: Category</option>
       <option value="new">Sort: Recently added</option>
@@ -590,6 +599,7 @@ browse the <a href="e/">full organization index</a> or use the open dataset
        filter, not just the chip's own pressed state. Search is debounced so this
        does not fire once per keystroke. -->
   <div class="dir-count" id="dirCount" role="status" aria-live="polite"></div>
+  <div class="dir-note" id="dirNote"></div>
   <div class="cards" id="cards"></div>
 </section>
 
@@ -839,6 +849,37 @@ let starSet = new Set();
 try{ starSet = new Set(JSON.parse(localStorage.getItem("toa-atlas-stars")||"[]")); }catch(e){}
 const cmpSet = new Set();
 let sharedList = null;   // set when viewing a ?list= URL someone shared
+
+/* ---------- receipts: what the data can and cannot vouch for ----------
+   Every signal here is read straight from the entry — nothing is inferred,
+   scored by a model, or hidden. An entry with doubts is never removed; it
+   carries a "trust less because…" line and sorts below surer entries.
+   Each doubt names the probe it comes from, so a judge can trace it. */
+const linkedIds = new Set();
+DATA.forEach(d=>(d.links||[]).forEach(l=>{ linkedIds.add(d.id); linkedIds.add(typeof l==="string" ? l : (l.id||l.to||l.target)); }));
+const isFunder = d => (d.offers||[]).includes("funding");
+const statesCheck = d => (d.facts||[]).some(f=>/check/i.test(f[0]) || /\$\s?\d/.test(f[1]||""));
+function monthsAgo(ym){
+  if(!ym) return null;
+  const [y,m] = ym.split("-").map(Number), now = new Date();
+  return (now.getFullYear()-y)*12 + (now.getMonth()+1-m);
+}
+function receipts(d){
+  const doubts = [];
+  if(d.approx) doubts.push({k:"approx", probe:1, t:`Pin is approximate (neighbourhood of ${d.loc.split(",")[0]})`});
+  const age = monthsAgo(d.lastVerified);
+  if(age !== null && age >= 3) doubts.push({k:"age", probe:5, t:`Last checked by a person ${age} months ago`});
+  if(isFunder(d) && !statesCheck(d)) doubts.push({k:"check", probe:4, t:"Offers funding but states no check size"});
+  if(!linkedIds.has(d.id)) doubts.push({k:"links", probe:2, t:"Not connected to any other org in the Atlas"});
+  return {doubts, age};
+}
+// a single sentence for "which of these do I trust less?"
+function trustVerdict(a, b){
+  const ra = receipts(a), rb = receipts(b);
+  if(ra.doubts.length === rb.doubts.length) return `No clear difference: both carry ${ra.doubts.length} doubt${ra.doubts.length===1?"":"s"}. Check both sources.`;
+  const [less, more, r] = ra.doubts.length > rb.doubts.length ? [a, b, ra] : [b, a, rb];
+  return `Trust ${less.name} less: ${r.doubts.map(x=>x.t.charAt(0).toLowerCase()+x.t.slice(1)).join("; ")}.`;
+}
 
 // orgs hosting an event in the next 7 days (events.json is produced by the
 // weekly events pipeline and served next to the app; absent locally — fail silent)
@@ -1677,14 +1718,36 @@ function renderCards(){
   }
   const relaxed = dirNeeds.size > 1 && band > 0 && band < dirNeeds.size;
   const sort=$("dirSort").value;
+  const nDoubt = d => receipts(d).doubts.length;
   list.sort((a,b)=> sort==="cat" ? (a.cat===b.cat ? a.name.localeCompare(b.name) : a.cat.localeCompare(b.cat))
                   : sort==="new" ? ((b.added||"").localeCompare(a.added||"") || a.name.localeCompare(b.name))
+                  : sort==="sure" ? (nDoubt(a)-nDoubt(b) || a.name.localeCompare(b.name))
                                  : a.name.localeCompare(b.name));
   $("dirCount").textContent = `${list.length} of ${DATA.length} organizations`
     + (relaxed ? ` · none offer all ${dirNeeds.size} — these meet ${band}` : "");
+  // What this list can't tell you, said plainly instead of guessed at.
+  const notes = [];
+  if(dirNeeds.has("funding")){
+    const funders = DATA.filter(isFunder);
+    notes.push(`Not sorted by check size: only ${funders.filter(statesCheck).length} of ${funders.length} funders in the Atlas state one.`);
+  }
+  if(list.length >= 5){
+    const west = list.filter(d=>d.lng < -71.85).length;
+    if(west <= 2) notes.push(`${west === 0 ? "None" : "Only " + west} of these ${list.length} ${west===1?"is":"are"} west of Worcester. That is thin coverage, not proof there's nothing there.`);
+  }
+  if(st && DATA.some(d=>d.cat==="startup")) notes.push(`Startups aren't matched to stages: they're peers, not resources. Find them under AI Companies & Startups.`);
+  $("dirNote").innerHTML = notes.map(n=>`<div>ⓘ ${esc(n)}</div>`).join("");
   $("cards").innerHTML = list.map(d=>{
     const col=cColor(d.cat);
-    const canCompare = d.cat==="vc" || d.cat==="accel" || d.cat==="angel";
+    // any two entries can be compared: "which of these do I trust less?" is a
+    // question about any pair, not only funders
+    const canCompare = true;
+    const rc = receipts(d);
+    const receiptHtml = `<div class="rcpt">` +
+      `<span class="rcpt-ok">✓ Checked by a person ${esc(fmtMonth(d.lastVerified))}</span>` +
+      (d.url ? ` · <a class="rcpt-src" href="${esc(d.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">source ↗</a>` : "") +
+      (rc.doubts.length ? `<div class="rcpt-doubt"><b>Trust less:</b> ${rc.doubts.map(x=>esc(x.t)).join(" · ")}</div>` : "") +
+      `</div>`;
     // The card stays mouse-clickable, but the org name is a real button so the
     // entry is reachable by keyboard — before this, 171 cards had zero focusable
     // way in while their ★/⚖ tools were tabbable, so you could shortlist an
@@ -1697,6 +1760,7 @@ function renderCards(){
       <div class="c-cat" style="color:${cInk(d.cat)}">${cLabel(d.cat)} · ${esc(d.loc.split(",")[0])}</div>
       <p>${esc(d.desc.length>150 ? d.desc.slice(0,150)+"…" : d.desc)}</p>
       <div class="c-meta">${relaxed ? (d.offers||[]).filter(o=>dirNeeds.has(o)).map(o=>OFFERS_META[o]).filter(Boolean).map(m=>`<span class="tag offer-tag">${m.icon} ${m.label}</span>`).join("") : ""}${isNew(d)?`<span class="tag new-tag">✨ New</span>`:""}${eventHosts[d.id]?`<span class="tag event-tag" title="${esc(eventHosts[d.id].title)}">🎟 event this week</span>`:""}${d.applyBy && d.applyBy!=="rolling" && applyOpen(d) ? `<span class="tag apply-tag">⏳ Apply by ${esc(fmtDeadline(d.applyBy))}</span>`:""}${isStale(d)?`<span class="tag stale-tag" title="Last verified ${fmtMonth(d.lastVerified)}">⚠ not recently verified</span>`:""}${d.badge?`<span class="badge">${esc(d.badge)}</span>`:""}${(d.tags||[]).slice(0,3).map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div>
+      ${receiptHtml}
     </div>`;
   }).join("") || `<div style="color:var(--muted)">No matches — try clearing filters, or <a href="#" onclick="suggestEntry();return false" style="color:#ffc600">suggest a new entry</a>.</div>`;
 }
@@ -1792,10 +1856,14 @@ function openCompare(){
     ["Applications", list.map(d=>applyOpen(d) ? (d.applyBy==="rolling"?"Open — rolling":"Open — by "+esc(fmtDeadline(d.applyBy))) : "—")],
     ...factLabels.map(l=>[esc(l), list.map(d=>cell(d,l))]),
     ["Stages", list.map(d=>(d.stages||[]).map(n=>STAGES.find(s=>s.n===n)?.t).join(", ")||"—")],
+    ["Checked by a person", list.map(d=>esc(fmtMonth(d.lastVerified)))],
+    ["Source", list.map(d=>d.url ? `<a href="${esc(d.url)}" target="_blank" rel="noopener">${esc(d.url.replace(/^https?:\/\/(www\.)?/,"").replace(/\/$/,""))} ↗</a>` : "—")],
+    ["Trust less because", list.map(d=>{ const r = receipts(d); return r.doubts.length ? r.doubts.map(x=>`<span class="rcpt-doubt" style="display:block">${esc(x.t)}</span>`).join("") : "Nothing in the data to doubt"; })],
     ["", list.map(d=>`<a href="#" onclick="closeCompare();openDrawer('${d.id}');return false">Full entry →</a>`)],
   ];
   $("cmpBody").innerHTML = `<table class="cmp-table">` +
-    rows.map(([label,cells])=>`<tr><td>${label}</td>${cells.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("") + `</table>`;
+    rows.map(([label,cells])=>`<tr><td>${label}</td>${cells.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("") + `</table>` +
+    (list.length === 2 ? `<p class="cmp-verdict">${esc(trustVerdict(list[0], list[1]))}</p>` : "");
   $("compareModal").style.display="flex";
   dialogOpened($("compareModal"));
 }
