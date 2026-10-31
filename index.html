@@ -189,6 +189,14 @@ html:not(.dark) .gx-search .map-results{background:rgba(10,15,30,.97);color:#e6e
 .pop-btn{display:inline-block;font-size:12px;font-weight:700;color:#000;background:linear-gradient(90deg,#ffd54f,#ffc600);
   padding:6px 12px;border-radius:8px;cursor:pointer;text-decoration:none}
 .pulse-dot{border-radius:50%;box-shadow:0 0 10px 2px currentColor;border:2px solid rgba(255,255,255,.75)}
+/* Probe 1: approximate pin = hollow dashed ring, translucent fill, no glow */
+.approx-ring{width:22px;height:22px;border-radius:50%;border:2px dashed currentColor;box-sizing:border-box;
+  background:color-mix(in srgb, currentColor 18%, transparent)}
+.pop-approx{font-size:12px;color:var(--muted);margin:4px 0 6px}
+.lg-key{display:flex;flex-direction:column;gap:5px;margin-top:8px;padding-top:8px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+.lg-key-row{display:flex;align-items:center;gap:8px}
+.lg-key-dot{width:11px;height:11px;border-radius:50%;background:var(--muted);flex:none}
+.lg-key-ring{width:13px;height:13px;border-radius:50%;border:1.5px dashed var(--muted);box-sizing:border-box;flex:none}
 .cluster-chip{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   font:700 13px/1 'Red Hat Display',sans-serif;background:rgba(20,23,28,.92);color:#fff;
   border:2px solid #ff5c45;box-shadow:0 0 12px rgba(255,92,69,.35)}
@@ -1182,13 +1190,21 @@ function setMapTiles(){ if(!map) return; if(mapTiles) map.removeLayer(mapTiles);
 
   DATA.forEach(d=>{
     const col = cColor(d.cat);
-    const icon = L.divIcon({className:"", html:
-      `<div class="pulse-dot" style="width:13px;height:13px;background:${col};color:${col}"></div>`,
-      iconSize:[13,13], iconAnchor:[7,7]});
-    const m = L.marker([d.lat,d.lng], {icon, title:d.name});
+    // Probe 1: an approximate pin is a neighbourhood, not an address, so it
+    // must not look like one. Exact pins stay solid dots; approximate ones are
+    // a hollow dashed ring with no glow — the same colour, visibly less sure.
+    const icon = d.approx
+      ? L.divIcon({className:"", html:
+          `<div class="approx-ring" style="color:${col}"></div>`,
+          iconSize:[22,22], iconAnchor:[11,11]})
+      : L.divIcon({className:"", html:
+          `<div class="pulse-dot" style="width:13px;height:13px;background:${col};color:${col}"></div>`,
+          iconSize:[13,13], iconAnchor:[7,7]});
+    const m = L.marker([d.lat,d.lng], {icon, title: d.approx ? d.name + " (approximate location)" : d.name});
     m.bindPopup(
       `<div class="pop-name">${esc(d.name)}</div>`+
       `<div class="pop-cat" style="color:${cInk(d.cat)}">${cLabel(d.cat)}</div>`+
+      (d.approx ? `<div class="pop-approx">◌ Approximate: this pin marks ${esc(d.loc)}, not the street address.</div>` : "")+
       `<div class="pop-desc">${esc(d.desc.length>140 ? d.desc.slice(0,140)+"…" : d.desc)}</div>`+
       `<span class="pop-btn" onclick="openDrawer('${d.id}')">Full details →</span>`,
       {maxWidth:260});
@@ -1219,6 +1235,14 @@ function setMapTiles(){ if(!map) return; if(mapTiles) map.removeLayer(mapTiles);
     });
     lg.appendChild(div);
   });
+  // key for the two pin shapes, so the difference is learnable without the tour
+  const nApprox = DATA.filter(d=>d.approx).length;
+  const key = document.createElement("div");
+  key.className = "lg-key";
+  key.innerHTML =
+    `<span class="lg-key-row"><span class="lg-key-dot"></span>Exact address</span>` +
+    `<span class="lg-key-row"><span class="lg-key-ring"></span>Approximate: neighbourhood only (${nApprox} of ${DATA.length})</span>`;
+  lg.appendChild(key);
 
   // search
   const inp = $("mapSearch"), res = $("mapResults");
