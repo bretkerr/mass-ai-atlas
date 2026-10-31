@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Receipts: one-page brief</title>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;600;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  @page{size:Letter;margin:0.5in}
+  :root{--ink:#1f1b16;--muted:#5f5547;--gold:#a06a00;--doubt:#b45309;--line:#d9cfbd;--paper:#fbf8f2}
+  *{box-sizing:border-box}
+  body{margin:0;font:10.4pt/1.42 'Red Hat Display',system-ui,sans-serif;color:var(--ink);background:#fff}
+  header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:10px}
+  h1{font-size:25pt;font-weight:800;letter-spacing:-.02em;margin:0;line-height:1}
+  .meta{text-align:right;font-size:8.6pt;color:var(--muted);line-height:1.45}
+  .meta b{color:var(--ink)}
+  .lede{font-size:12.4pt;line-height:1.38;margin:0 0 10px;font-weight:600}
+  .lede em{font-style:normal;color:var(--gold)}
+  .grid{display:grid;grid-template-columns:1.12fr .88fr;gap:16px}
+  h2{font-size:8.4pt;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:10px 0 4px;font-weight:800}
+  h2:first-child{margin-top:0}
+  p{margin:0 0 6px}
+  ol,ul{margin:0 0 6px;padding-left:16px}
+  li{margin:0 0 3px}
+  .num{font:600 9.6pt 'IBM Plex Mono',monospace}
+  table{width:100%;border-collapse:collapse;font-size:9pt}
+  td,th{border-bottom:1px solid var(--line);padding:3px 4px;vertical-align:top;text-align:left}
+  th{font-weight:800;color:var(--muted);font-size:7.8pt;text-transform:uppercase;letter-spacing:.05em}
+  .receipt{background:var(--paper);border:1px solid var(--line);padding:9px 11px;font:8.4pt/1.45 'IBM Plex Mono',monospace;border-radius:3px}
+  .receipt .r-h{text-align:center;font-weight:600}
+  .receipt .d{color:var(--doubt)}
+  .receipt hr{border:0;border-top:1px dashed #b9b7bf;margin:5px 0}
+  .r-row{display:flex;justify-content:space-between}
+  .refuse li{list-style:none;margin-left:-16px}
+  .refuse li::before{content:"✕ ";color:var(--doubt);font-weight:800}
+  footer{margin-top:10px;border-top:1px solid var(--line);padding-top:6px;font-size:8.2pt;color:var(--muted);display:flex;justify-content:space-between;gap:12px}
+  a{color:var(--ink)}
+</style></head>
+<body>
+<header>
+  <h1>Receipts</h1>
+  <div class="meta"><b>The Claudettes</b> · Track B, “The Passage”<br>Chart the Common Wealth · The Open Accelerator × Red Hat · 31 Oct 2026<br>Bret Kerr, with Claude</div>
+</header>
+
+<p class="lede">A founder says what they need. The Mass AI Atlas answers with a receipt: <em>who's on the list, the month a person last checked each one, and what to doubt.</em> Doubt is shown, never hidden.</p>
+
+<div class="grid">
+<div>
+  <h2>The problem, in this morning's numbers</h2>
+  <ul>
+    <li><span class="num">87 of 197</span> pins are a neighbourhood, not an address, and looked exactly like real ones (Probe 1).</li>
+    <li>Only <span class="num">13 of 61</span> funders state a check size (Probe 4), yet a founder sees a list with no caveat.</li>
+    <li><span class="num">52</span> entries were last checked in June (Probe 5); only <span class="num">5</span> sit west of Worcester (Probe 6).</li>
+  </ul>
+
+  <h2>What we built (one HTML file, no build step)</h2>
+  <ol>
+    <li><b>Ask in a sentence.</b> “I need ___”, typed or spoken. Plain keyword rules set the Atlas's own <i>I need…</i> filters, which stay visible and editable. It never names an organization.</li>
+    <li><b>Get a receipt.</b> The five surest matches, what each offers, the month a person checked it, and a ⚠ “trust less” line only where the data gives a reason.</li>
+    <li><b>Compare the top two.</b> One click, one sentence: “Trust X less: …”. This is the hand-off test.</li>
+    <li><b>Probe 1 made visible.</b> Approximate pins are dashed rings; exact ones stay solid. Map tiles flip to their receipt.</li>
+    <li><b>Review proposals.</b> Drop a file of proposed entries; six checks flag duplicates, wrong places, out-of-state, closed, unsourced facts and suspicious domains, each with a reason.</li>
+  </ol>
+
+  <h2>Probe made visible: before → after</h2>
+  <table>
+    <tr><th>Probe</th><th>Before</th><th>After</th></tr>
+    <tr><td>1 · approximate pins</td><td>identical to addresses</td><td>dashed ring + legend “87 of 197”</td></tr>
+    <tr><td>4 · check sizes</td><td>silent</td><td>“Not sorted by check size: only 13 of 61 state one”</td></tr>
+    <tr><td>5 · freshness</td><td>flag only after 12 months</td><td>every line shows its month; ⚠ after 3</td></tr>
+    <tr><td>3 · startups, no stage</td><td>looked like a gap</td><td>“peers, not resources”: not a doubt</td></tr>
+  </table>
+</div>
+
+<div>
+  <h2>A real receipt</h2>
+  <div class="receipt">
+    <div class="r-h">MASS AI ATLAS</div>
+    <div class="r-h">“I need pre-seed money and a mentor”</div>
+    <hr>
+    <div class="r-row"><b>MassVentures</b><span>✓ OCT 26</span></div>
+    <div>&nbsp; offers funding · mentorship</div>
+    <div class="r-row"><b>Analog Devices</b><span>✓ OCT 26</span></div>
+    <div class="d">&nbsp; ⚠ trust less: no check size stated</div>
+    <div class="r-row"><b>C10 Labs</b><span>✓ AUG 26</span></div>
+    <div class="d">&nbsp; ⚠ trust less: pin is a neighbourhood</div>
+    <hr>
+    <div class="r-row"><span>OLDEST CHECK</span><span>AUG 26</span></div>
+    <div>Not sorted by check size: only 13 of 61 funders state one.</div>
+  </div>
+  <p style="margin-top:6px;font-size:9pt"><b>Compare the top two →</b> “Trust Analog Devices less: offers funding but states no check size.”</p>
+
+  <h2>What it refuses to do</h2>
+  <ul class="refuse">
+    <li>Hide or delete an entry for doubt. Flag, never delete.</li>
+    <li>Sort funders by a check size most don't state.</li>
+    <li>Name an organization from the founder's words.</li>
+    <li>Call a proposal clean when its site wasn't checked: “Nothing flagged · site not checked.”</li>
+  </ul>
+
+  <h2>Why it can merge on Monday</h2>
+  <p>Built inside the Atlas's own <span class="num">index.html</span>: no build step, framework, database or key. Every number is computed in the browser from the YAML the Atlas already loads. All 32 of the repo's browser and accessibility tests pass; the data loader is vendored so it works on bad wifi.</p>
+</div>
+</div>
+
+<footer>
+  <span><b>Video</b> youtu.be/VRSNQxPLBDM · <b>Repo</b> github.com/bretkerr/mass-ai-atlas/tree/receipts</span>
+  <span>Data: Mass AI Atlas, The Open Accelerator (CC BY 4.0) · Map: OpenStreetMap via OpenFreeMap · Code MIT</span>
+</footer>
+</body></html>
