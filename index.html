@@ -163,6 +163,7 @@ html{scrollbar-color:#cbb68c rgba(203,182,140,.08)}
 .welcome-btn.playing .ico-pause{display:inline}
 .welcome-cap{margin:14px 0 0;font-size:17px;line-height:1.45;color:var(--text);max-width:62ch;min-height:1.45em}
 .welcome-note{margin:6px 0 0;font-size:12px;color:var(--muted)}
+#site-header svg{width:24px;height:24px}   /* if Tailwind's CDN fails, icons must not balloon */
 .lg-head{display:flex;align-items:center;gap:6px;margin:-4px -6px 6px -4px;cursor:grab;touch-action:none;user-select:none}
 .map-legend.dragging .lg-head{cursor:grabbing}
 .map-legend.dragging{box-shadow:0 18px 40px rgba(0,0,0,.45);transition:none}
@@ -257,7 +258,7 @@ html:not(.dark) .gx-search .map-results{background:rgba(10,15,30,.97);color:#e6e
 .rcpt-note,.sl-note{display:block;margin-top:4px;color:var(--text);font-style:italic}
 .logo{--s:28px;position:relative;flex:none;width:var(--s);height:var(--s);border-radius:8px;overflow:hidden;display:inline-grid;place-items:center;
   background:var(--c);color:#0a0a0f;font:800 calc(var(--s)*.38)/1 'Red Hat Display',system-ui,sans-serif;letter-spacing:-.02em}
-.logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:3px;box-sizing:border-box}
+.logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:3px;box-sizing:border-box;opacity:0;transition:opacity .2s}
 .logo-lg{--s:40px;border-radius:10px}
 .pf-head{display:flex;gap:11px;align-items:center;margin-bottom:6px}
 .pf-head .pop-name{margin-bottom:1px}
@@ -377,7 +378,7 @@ html:not(.dark) .pr-flags li{color:#b45309}
 /* ---------- the counter: ask → receipt ---------- */
 .counter{--paper:#f7f7f2;--ink:#17161c;--ink2:#5e5c66;--doubt:#b45309;
   border-bottom:1px solid var(--line);padding:40px 28px 36px;position:relative;overflow:hidden}
-.counter-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:64px;align-items:center}
+.counter-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:64px;align-items:start}
 .ask{min-width:0}
 .ask-sentence{display:flex;flex-wrap:wrap;align-items:baseline;gap:.25em .35em;font-weight:800;
   font-size:clamp(30px,4.05vw,51px);line-height:1.04;letter-spacing:-.03em;color:var(--text);cursor:text}
@@ -440,6 +441,8 @@ html:not(.dark) .pr-flags li{color:#b45309}
 .r-item{margin-bottom:9px}
 .r-doubt{color:var(--doubt);padding-left:2ch;font-size:12px}
 .r-sum .r-line{font-size:12px}
+.r-why{color:var(--ink2);padding-left:2ch;font-size:11.5px}
+.rv-caveat{flex-basis:100%;margin:2px 0 0;font-size:13px;color:var(--muted)}
 .r-foot{text-align:center;color:var(--ink2);font-size:11.5px;margin-top:14px}
 .r-note{font-size:11.5px;color:var(--ink2);margin-top:6px}
 .r-empty{color:var(--ink2);text-align:center;padding:10px 0}
@@ -448,8 +451,9 @@ html:not(.dark) .pr-flags li{color:#b45309}
 .r-bars{height:24px;margin:12px auto 0;width:70%;opacity:.85;
   background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 8px,var(--ink) 8px 11px,transparent 11px 12px)}
 .till-actions[hidden]{display:none}
-.till-actions{display:flex;gap:10px;justify-content:center;margin-top:4px}
-.till-btn{font:600 14px/1 inherit;font-family:inherit;padding:12px 18px;border-radius:999px;cursor:pointer;background:var(--text);color:var(--bg);border:1px solid var(--text)}
+.till-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:4px}
+#tillCmp{flex-basis:100%}
+.till-btn{font:600 13.5px/1 inherit;font-family:inherit;padding:12px 16px;white-space:nowrap;border-radius:999px;cursor:pointer;background:var(--text);color:var(--bg);border:1px solid var(--text)}
 .till-btn-ghost{background:none;color:var(--text);border-color:var(--line)}
 html:not(.dark) .till-slot{background:#17161c}
 html:not(.dark) .receipt{box-shadow:0 18px 36px rgba(15,23,42,.18)}
@@ -467,7 +471,7 @@ html:not(.dark) .receipt{box-shadow:0 18px 36px rgba(15,23,42,.18)}
 }
 .dir-note{font-size:12.5px;color:var(--muted);margin:-4px 0 12px;display:flex;flex-direction:column;gap:3px}
 .cmp-table a{color:var(--gold-ink)}
-.cmp-verdict{margin:12px 0 0;padding:10px 12px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);font-size:13.5px}
+.cmp-verdict{margin:0 0 14px;padding:12px 14px;border-radius:10px;background:rgba(251,191,36,.12);border:1px solid #fbbf24;font-size:17px;font-weight:700;line-height:1.4}
 .lg-key{display:flex;flex-direction:column;gap:5px;margin-top:8px;padding-top:8px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
 .lg-key-row{display:flex;align-items:center;gap:8px}
 .lg-key-dot{width:11px;height:11px;border-radius:50%;background:var(--muted);flex:none}
@@ -728,8 +732,8 @@ browse the <a href="e/">full organization index</a> or use the open dataset
 </div>
 
 <div id="cmpBar" class="cmp-bar" style="display:none">
-  <span>⚖ <span id="cmpBarCount">0</span> selected</span>
-  <button class="btn btn-pri" id="cmpBarGo" onclick="openCompare()" disabled>Compare</button>
+  <span id="cmpBarText">Pick one more to compare</span>
+  <button class="btn btn-pri" id="cmpBarGo" onclick="openCompare()" hidden>Compare</button>
 </div>
 
 <div id="tourCard" class="tour-card" style="display:none" role="dialog" aria-label="Quick tour">
@@ -800,16 +804,9 @@ browse the <a href="e/">full organization index</a> or use the open dataset
     <div class="hero-cta">
       <a class="btn btn-pri" href="https://the-open-accelerator.com/residency/" target="_blank" rel="noopener">Apply for the TOA Residency</a>
       <a class="btn btn-sec" href="https://the-open-accelerator.com/community/" target="_blank" rel="noopener">Join the Community</a>
-      <button type="button" class="btn btn-sec welcome-btn" id="welcomeBtn" aria-pressed="false" aria-describedby="welcomeNote">
-        <svg class="welcome-ico" viewBox="0 0 16 16" aria-hidden="true"><path class="ico-play" d="M4 2.5v11l9-5.5z"/><path class="ico-pause" d="M4 2.5h3v11H4zM9 2.5h3v11H9z"/></svg>
-        <span id="welcomeLabel">Play the 30-second welcome</span>
-      </button>
-      <audio id="welcomeAudio" src="media/welcome.mp3" preload="none">
-        <track kind="captions" src="media/welcome.vtt" srclang="en" label="English">
-      </audio>
+
     </div>
-    <p class="welcome-cap" id="welcomeCap" hidden></p>
-    <p class="welcome-note" id="welcomeNote">AI voice, scripted from this hackathon's opening keynote.</p>
+
     <div class="stats" id="stats"></div>
   </div>
 </header>
@@ -855,7 +852,8 @@ browse the <a href="e/">full organization index</a> or use the open dataset
         <article class="receipt" id="receipt" aria-label="Your shortlist receipt"></article>
       </div>
       <div class="till-actions" id="tillActions" hidden>
-        <button type="button" class="till-btn" id="tillOpen">See the whole list</button>
+        <button type="button" class="till-btn" id="tillCmp" hidden>⚖ Compare the top two</button>
+        <button type="button" class="till-btn till-btn-ghost" id="tillOpen">See the whole list</button>
         <button type="button" class="till-btn till-btn-ghost" onclick="printReceipt()">Print</button>
       </div>
     </div>
@@ -921,7 +919,7 @@ browse the <a href="e/">full organization index</a> or use the open dataset
       <option value="">Any founder stage</option>
     </select>
     <select class="dir-select" id="dirSort" aria-label="Sort organizations">
-      <option value="sure" selected>Sort: Surest first</option>
+      <option value="sure" selected>Sort: Fewest doubts first</option>
       <option value="name">Sort: A → Z</option>
       <option value="cat">Sort: Category</option>
       <option value="new">Sort: Recently added</option>
@@ -1017,10 +1015,11 @@ browse the <a href="e/">full organization index</a> or use the open dataset
 <script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/5.24.0/maplibre-gl.min.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.1.4/leaflet-maplibre-gl.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.3.2/dist/js-yaml.min.js"></script>
+<!-- vendored: the atlas can't load its data without these, so they don't depend on venue wifi -->
+<script src="lib/js-yaml.min.js"></script>
 <!-- Ajv 8.17.1 is the newest browser build on a CDN (npm uses 8.20.0); its advisory
      GHSA-2g4f-4pwh-qvx6 needs the $data option, which atlas-data.js doesn't enable -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/8.17.1/ajv7.min.js"></script>
+<script src="lib/ajv7.min.js"></script>
 <script src="atlas-data.js"></script>
 <script>
 /* Data loader: fetch data/*.yml + schemas, validate (atlas-data.js), expose
@@ -1161,6 +1160,7 @@ document.querySelectorAll(".tab[data-view]").forEach(t=>{
     $("view-"+currentView).classList.add("active");
     if(currentView==="map" && map) setTimeout(()=>map.invalidateSize(),60);
     if(currentView==="galaxy") { gxResize(); gxKick(); }
+    if(typeof syncCmpBar === "function") syncCmpBar();
     window.scrollTo({top:0});
     updateURL();
   });
@@ -1225,7 +1225,7 @@ function logoHtml(d, cls){
   const words = d.name.replace(/\(.*?\)/g,"").split(/[\s\-–&]+/).filter(w=>/^[A-Za-z0-9]/.test(w));
   const mono = (words.length > 1 ? words[0][0] + words[1][0] : (words[0]||"?").slice(0,2)).toUpperCase();
   const img = origin ? `<img src="${esc(origin)}/apple-touch-icon.png" data-alt="${esc(origin)}/favicon.ico ${esc(origin)}/favicon.svg" alt="" loading="lazy" decoding="async"
-      onload="if(this.naturalWidth<8){this.onerror()}" onerror="const n=(this.dataset.alt||'').split(' ').filter(Boolean);if(n.length){this.src=n.shift();this.dataset.alt=n.join(' ')}else{this.remove()}">` : "";
+      onload="if(this.naturalWidth<8){this.onerror()}else{this.style.opacity=1}" onerror="const n=(this.dataset.alt||'').split(' ').filter(Boolean);if(n.length){this.src=n.shift();this.dataset.alt=n.join(' ')}else{this.remove()}">` : "";
   return `<span class="logo ${cls||""}" style="--c:${cColor(d.cat)}" aria-hidden="true"><b>${esc(mono)}</b>${img}</span>`;
 }
 function popTile(d){
@@ -1255,7 +1255,7 @@ function popTile(d){
         <div class="pop-name">${esc(d.name)}</div>
         ${d.url ? `<a class="pf-src" href="${esc(d.url)}" target="_blank" rel="noopener">${esc(d.url.replace(/^https?:\/\/(www\.)?/,"").replace(/\/$/,""))} ↗</a>` : ""}
         <div class="pf-label">Trust less because</div>
-        ${r.doubts.length ? r.doubts.map(x=>`<div class="pf-doubt">${esc(x.t)}</div>`).join("") : `<div class="pf-ok">Nothing in the data to doubt.</div>`}
+        ${r.doubts.length ? r.doubts.map(x=>`<div class="pf-doubt">⚠ ${esc(x.t)}</div>`).join("") : `<div class="pf-ok">Nothing in the data to doubt.</div>`}
         ${facts ? `<div class="pf-full"><div class="pf-label">On record</div>${facts}</div>` : ""}
         ${bar("back")}
       </section>
@@ -1304,7 +1304,7 @@ function receipts(d){
   const doubts = [];
   if(d.approx) doubts.push({k:"approx", probe:1, t:`Pin is approximate (neighbourhood of ${d.loc.split(",")[0]})`});
   const age = monthsAgo(d.lastVerified);
-  if(age !== null && age >= 3) doubts.push({k:"age", probe:5, t:`Last checked by a person ${age} months ago`});
+  if(age !== null && age >= 3) doubts.push({k:"age", probe:5, t:`${age} months since a person checked it`});
   if(isFunder(d) && !statesCheck(d)) doubts.push({k:"check", probe:4, t:"Offers funding but states no check size"});
   if(!linkedIds.has(d.id)) doubts.push({k:"links", probe:2, t:"Not connected to any other org in the Atlas"});
   return {doubts, age};
@@ -1312,7 +1312,15 @@ function receipts(d){
 // a single sentence for "which of these do I trust less?"
 function trustVerdict(a, b){
   const ra = receipts(a), rb = receipts(b);
-  if(ra.doubts.length === rb.doubts.length) return `No clear difference: both carry ${ra.doubts.length} doubt${ra.doubts.length===1?"":"s"}. Check both sources.`;
+  if(ra.doubts.length === rb.doubts.length){
+    // same number of doubts: the older check loses, then the approximate pin
+    if(ra.age !== rb.age && ra.age !== null && rb.age !== null){
+      const [o, n, oa, na] = ra.age > rb.age ? [a, b, ra.age, rb.age] : [b, a, rb.age, ra.age];
+      return `Trust ${o.name} less: a person last checked it ${oa} month${oa===1?"":"s"} ago, ${n.name} ${na === 0 ? "this month" : na + " month" + (na===1?"":"s") + " ago"}.`;
+    }
+    if(!!a.approx !== !!b.approx){ const o = a.approx ? a : b; return `Trust ${o.name} less: its pin is a neighbourhood, not an address.`; }
+    return `No clear difference: both carry ${ra.doubts.length} doubt${ra.doubts.length===1?"":"s"}. Check both sources.`;
+  }
   const [less, more, r] = ra.doubts.length > rb.doubts.length ? [a, b, ra] : [b, a, rb];
   return `Trust ${less.name} less: ${r.doubts.map(x=>x.t.charAt(0).toLowerCase()+x.t.slice(1)).join("; ")}.`;
 }
@@ -2192,7 +2200,7 @@ function renderCards(){
     const receiptHtml = `<div class="rcpt">` +
       `<span class="rcpt-ok">✓ Checked by a person ${esc(fmtMonth(d.lastVerified))}</span>` +
       (d.url ? ` · <a class="rcpt-src" href="${esc(d.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">source ↗</a>` : "") +
-      (rc.doubts.length ? `<div class="rcpt-doubt"><b>Trust less:</b> ${rc.doubts.map(x=>esc(x.t)).join(" · ")}</div>` : "") +
+      (rc.doubts.length ? `<div class="rcpt-doubt">⚠ <b>Trust less:</b> ${rc.doubts.map(x=>esc(x.t)).join(" · ")}</div>` : "") +
       (noteMap[d.id] ? `<div class="rcpt-note">✎ ${esc(noteMap[d.id])}</div>` : "") +
       `</div>`;
     // The card stays mouse-clickable, but the org name is a real button so the
@@ -2206,7 +2214,7 @@ function renderCards(){
       <div class="card-tools">${canCompare?`<button class="card-tool cmp ${cmpSet.has(d.id)?'on':''}" title="Compare" aria-pressed="${cmpSet.has(d.id)}" aria-label="Add ${esc(d.name)} to comparison" onclick="event.stopPropagation();toggleCompare('${d.id}')">⚖</button>`:""}<button class="card-tool star ${starSet.has(d.id)?'on':''}" title="Save to shortlist" aria-pressed="${starSet.has(d.id)}" aria-label="Save ${esc(d.name)} to your shortlist" onclick="event.stopPropagation();toggleStar('${d.id}')">${starSet.has(d.id)?"★":"☆"}</button></div>
       <div class="c-cat" style="color:${cInk(d.cat)}">${cLabel(d.cat)} · ${esc(d.loc.split(",")[0])}</div>
       <p>${esc(d.desc.length>150 ? d.desc.slice(0,150)+"…" : d.desc)}</p>
-      <div class="c-meta">${relaxed ? (d.offers||[]).filter(o=>dirNeeds.has(o)).map(o=>OFFERS_META[o]).filter(Boolean).map(m=>`<span class="tag offer-tag">${m.icon} ${m.label}</span>`).join("") : ""}${isNew(d)?`<span class="tag new-tag">✨ New</span>`:""}${eventHosts[d.id]?`<span class="tag event-tag" title="${esc(eventHosts[d.id].title)}">🎟 event this week</span>`:""}${d.applyBy && d.applyBy!=="rolling" && applyOpen(d) ? `<span class="tag apply-tag">⏳ Apply by ${esc(fmtDeadline(d.applyBy))}</span>`:""}${isStale(d)?`<span class="tag stale-tag" title="Last verified ${fmtMonth(d.lastVerified)}">⚠ not recently verified</span>`:""}${d.badge?`<span class="badge">${esc(d.badge)}</span>`:""}${(d.tags||[]).slice(0,3).map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div>
+      <div class="c-meta">${dirNeeds.size ? (d.offers||[]).filter(o=>dirNeeds.has(o)).map(o=>OFFERS_META[o]).filter(Boolean).map(m=>`<span class="tag offer-tag">${m.icon} ${m.label}</span>`).join("") : ""}${isNew(d)?`<span class="tag new-tag">✨ New</span>`:""}${eventHosts[d.id]?`<span class="tag event-tag" title="${esc(eventHosts[d.id].title)}">🎟 event this week</span>`:""}${d.applyBy && d.applyBy!=="rolling" && applyOpen(d) ? `<span class="tag apply-tag">⏳ Apply by ${esc(fmtDeadline(d.applyBy))}</span>`:""}${isStale(d)?`<span class="tag stale-tag" title="Last verified ${fmtMonth(d.lastVerified)}">⚠ not recently verified</span>`:""}${d.badge?`<span class="badge">${esc(d.badge)}</span>`:""}${(d.tags||[]).slice(0,3).map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div>
       ${receiptHtml}
     </div>`;
   }).join("") || `<div style="color:var(--muted)">No matches — try clearing filters, or <a href="#" onclick="suggestEntry();return false" style="color:#ffc600">suggest a new entry</a>.</div>`;
@@ -2271,10 +2279,12 @@ function renderReceipt(animate){
   let doubtsShown = 0;
   const items = top.map(d=>{
     const r = receipts(d);
-    const lines = r.doubts.map(x => x.k==="age" ? `last checked ${r.age} months ago` : DOUBT_SHORT[x.k]);
+    const lines = r.doubts.map(x => x.k==="age" ? `${r.age} months since a person checked it` : DOUBT_SHORT[x.k]);
     doubtsShown += lines.length;
+    const why = (d.offers||[]).filter(o=>dirNeeds.has(o)).map(o=>OFFERS_META[o].label.toLowerCase());
     return `<div class="r-item"><div class="r-line"><button type="button" onclick="openDrawer('${d.id}')" title="Open ${esc(d.name)}">${esc(d.name)}</button><span class="r-chk">✓ ${shortMonth(d.lastVerified)}</span></div>`
-      + lines.map(t=>`<div class="r-doubt">trust less: ${esc(t)}</div>`).join("") + `</div>`;
+      + (why.length ? `<div class="r-why">offers ${esc(why.join(" · "))}</div>` : "")
+      + lines.map(t=>`<div class="r-doubt">⚠ trust less: ${esc(t)}</div>`).join("") + `</div>`;
   }).join("");
   el.innerHTML = `<div class="r-head"><div class="r-shop">MASS AI ATLAS</div><div class="r-meta">${esc(stamp)}</div>
       <div class="r-q">“I need ${esc(askText)}”</div></div>
@@ -2283,7 +2293,8 @@ function renderReceipt(animate){
     <hr class="r-rule">
     <div class="r-sum">
       <div class="r-line"><span>ON THIS RECEIPT</span><span>${top.length} OF ${list.length}</span></div>
-      <div class="r-line"><span>CHECKED BY A PERSON</span><span>${top.filter(d=>d.lastVerified).length}/${top.length}</span></div>
+      ${top.length ? `<div class="r-line"><span>OLDEST CHECK</span><span>${shortMonth(top.map(d=>d.lastVerified).filter(Boolean).sort()[0])}</span></div>
+      <div class="r-line"><span>NEWEST CHECK</span><span>${shortMonth(top.map(d=>d.lastVerified).filter(Boolean).sort().pop())}</span></div>` : ""}
       <div class="r-line"><span>DOUBTS SHOWN</span><span>${doubtsShown}</span></div>
     </div>
     ${relaxed ? `<div class="r-note">None offer everything you asked for. These meet ${band}.</div>` : ""}
@@ -2291,6 +2302,8 @@ function renderReceipt(animate){
     <div class="r-bars" aria-hidden="true"></div>
     <div class="r-foot">Flag, never delete.<br>Data: Mass AI Atlas, The Open Accelerator (CC BY 4.0)</div>`;
   $("tillActions").hidden = !list.length;
+  $("tillCmp").hidden = top.length < 2;
+  $("tillCmp").onclick = () => { cmpSet.clear(); cmpSet.add(top[0].id); cmpSet.add(top[1].id); syncCmpBar(); openCompare(); };
   $("tillOpen").textContent = list.length > top.length ? `See all ${list.length} in the directory` : "Open in the directory";
   if(animate){ el.classList.remove("printing"); void el.offsetWidth; el.classList.add("printing"); }
 }
@@ -2419,7 +2432,6 @@ function checkProposal(p){
   if(CLOSED.test(p.desc||"") || CLOSED.test(p.why||"")) flags.push("The description says it closed, wound down or was acquired");
   const age = monthsAgo(p.lastVerified);
   if(age !== null && age > STALE_MONTHS) flags.push(`Last checked by a person ${age} months ago`);
-  if(!p.lastVerified) notes.push("No one has verified it yet (expected for a new proposal).");
   // 5. unsourced fact
   const risky = (p.facts||[]).filter(f => Array.isArray(f) && RISKY_FACT.test(f[0]));
   const links = JSON.stringify([p.source, p.sources, p.sourceUrl, p.factSources, p.evidence, p.refs].filter(Boolean));
@@ -2431,7 +2443,7 @@ function checkProposal(p){
     const words = normName(p.name).split(" ").filter(w=>w.length > 2);
     if(words.length && !words.some(w => host.replace(/[^a-z0-9]/g,"").includes(w))) notes.push(`The website (${host}) doesn't contain the name. That's often fine; worth a look.`);
   }
-  if(host) notes.push({html:`Website not checked from the browser: <a href="${esc(p.url)}" target="_blank" rel="noopener">open ${esc(host)} ↗</a> to confirm it's live.`});
+  if(host) notes.push({html:`<a href="${esc(p.url)}" target="_blank" rel="noopener">Open ${esc(host)} ↗</a>`});
   return {flags, notes};
 }
 let rvItems = [], rvFlaggedFirst = true;
@@ -2470,11 +2482,14 @@ function rvRun(text){
   try{ rvItems = parseProposals(text).map(p=>({p, r:checkProposal(p)})); }
   catch(e){ $("rvSum").textContent = `Couldn't read that file: ${e.message}. It should be JSON, YAML or CSV in the Atlas's entry format.`; $("rvList").innerHTML = ""; return; }
   rvRender();
+  const paste = document.querySelector(".rv-paste"); if(paste) paste.open = false;
+  $("rvSum").scrollIntoView({behavior:"smooth", block:"start"});
 }
 function rvRender(){
   const flagged = rvItems.filter(x=>x.r.flags.length).length;
   $("rvSum").innerHTML = rvItems.length ? `<span><b>${rvItems.length}</b>proposals</span><span class="rv-sum-flag"><b>${flagged}</b>need a closer look</span><span><b>${rvItems.length-flagged}</b>look usable</span>
-    <label><input type="checkbox" ${rvFlaggedFirst?"checked":""} onchange="rvFlaggedFirst=this.checked;rvRender()"> Flagged first</label>` : "No entries found in that file.";
+    ${flagged ? `<label><input type="checkbox" ${rvFlaggedFirst?"checked":""} onchange="rvFlaggedFirst=this.checked;rvRender()"> Flagged first</label>` : ""}
+    <p class="rv-caveat">${rvItems.length === 1 ? "This proposal hasn't" : `None of these ${rvItems.length} has`} been checked by a person yet, and this page never fetches a website. Open ${rvItems.length === 1 ? "it" : "each"} ↗ before trusting it.</p>` : "No entries found in that file.";
   const order = rvFlaggedFirst ? [...rvItems].sort((a,b)=>(b.r.flags.length>0)-(a.r.flags.length>0)) : rvItems;
   const fmt = x => typeof x === "string" ? esc(x) : x.html;
   $("rvList").innerHTML = order.map(({p,r})=>{
@@ -2483,7 +2498,7 @@ function rvRender(){
     return `<article class="pr ${bad?"flag":"ok"}">
       <div class="pr-top">${p.url ? logoHtml(d) : ""}<div><div class="pr-name">${esc(p.name||"(no name)")}</div>
         <div class="pr-meta">${esc(CATS[p.cat]?cLabel(p.cat):(p.cat||"no category"))} · ${esc(p.loc||"no location")}</div></div>
-        <span class="pr-state">${bad ? `${r.flags.length} to check` : "No problems found"}</span></div>
+        <span class="pr-state">${bad ? `${r.flags.length} to check` : "Nothing flagged · site not checked"}</span></div>
       ${bad ? `<ul class="pr-flags">${r.flags.map(f=>`<li>${fmt(f)}</li>`).join("")}</ul>` : ""}
       <div class="pr-notes">${r.notes.map(fmt).join("<br>")}</div>
     </article>`;
@@ -2734,13 +2749,15 @@ function adoptShortlist(){ (sharedList||[]).forEach(id=>starSet.add(id)); shared
 window.toggleStar=toggleStar; window.openShortlist=openShortlist; window.closeShortlist=closeShortlist;
 window.shareShortlist=shareShortlist; window.adoptShortlist=adoptShortlist;
 
+function syncCmpBar(){
+  $("cmpBar").style.display = (cmpSet.size >= 1 && currentView === "directory") ? "" : "none";
+  $("cmpBarText").textContent = cmpSet.size === 1 ? "Pick one more to compare" : `⚖ ${cmpSet.size} selected`;
+  $("cmpBarGo").hidden = cmpSet.size < 2;
+}
 function toggleCompare(id){
   if(cmpSet.has(id)) cmpSet.delete(id);
   else { if(cmpSet.size>=3){ return; } cmpSet.add(id); }
-  const bar=$("cmpBar");
-  bar.style.display = cmpSet.size>=1 ? "" : "none";
-  $("cmpBarCount").textContent = cmpSet.size;
-  $("cmpBarGo").disabled = cmpSet.size<2;
+  syncCmpBar();
   renderCards();
 }
 function openCompare(){
@@ -2760,9 +2777,9 @@ function openCompare(){
     ["Trust less because", list.map(d=>{ const r = receipts(d); return r.doubts.length ? r.doubts.map(x=>`<span class="rcpt-doubt" style="display:block">${esc(x.t)}</span>`).join("") : "Nothing in the data to doubt"; })],
     ["", list.map(d=>`<a href="#" onclick="closeCompare();openDrawer('${d.id}');return false">Full entry →</a>`)],
   ];
-  $("cmpBody").innerHTML = `<table class="cmp-table">` +
-    rows.map(([label,cells])=>`<tr><td>${label}</td>${cells.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("") + `</table>` +
-    (list.length === 2 ? `<p class="cmp-verdict">${esc(trustVerdict(list[0], list[1]))}</p>` : "");
+  $("cmpBody").innerHTML = (list.length === 2 ? `<p class="cmp-verdict">${esc(trustVerdict(list[0], list[1]))}</p>` : "") +
+    `<table class="cmp-table">` +
+    rows.map(([label,cells])=>`<tr><td>${label}</td>${cells.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("") + `</table>`;
   $("compareModal").style.display="flex";
   dialogOpened($("compareModal"));
 }
@@ -2793,9 +2810,12 @@ window.dismissNewBanner = dismissNewBanner;
 
 /* ---------- guided tour (first visit, or via the nav link) ---------- */
 const TOUR = [
+  { view:"map", sel:".counter",
+    title:"Say what you need",
+    text:"Type it or say it. The Atlas prints a receipt: who's on your list, the month a person checked each one, and what to doubt." },
   { view:"map", sel:".nav-inner",
     title:"Welcome to the Mass AI Atlas 👋",
-    text:`${DATA.length} verified organizations — VCs, labs, accelerators, spaces and communities — in four views: the Map, the Galaxy of connections, a stage-by-stage Founder Journey, and a searchable Directory.` },
+    text:`${DATA.length} organizations, each checked by a person — VCs, labs, accelerators, spaces and communities — in five views: the Map, the Galaxy of connections, a stage-by-stage Founder Journey, a searchable Directory, and Review proposals.` },
   { view:"map", sel:"#mapSearch",
     title:"The Map",
     text:"Search anything, toggle categories in the legend, and click any colored pin for details. Top right switches between the Boston area and the whole Commonwealth; ⌖ re-frames the view you picked and ∴ groups or un-groups nearby pins." },
