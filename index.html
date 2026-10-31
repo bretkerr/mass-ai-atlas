@@ -153,6 +153,13 @@ html:not(.dark) .map-results{background:rgba(255,255,255,.97)}
   border:1px solid var(--line);border-radius:14px;padding:12px 14px;max-width:230px;backdrop-filter:blur(8px)}
 .map-legend h4{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted);margin-bottom:8px}
 /* movable, minimisable palette */
+.welcome-btn{position:relative;overflow:hidden;font:inherit;font-size:13px;font-weight:700}
+.welcome-btn::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:calc(var(--p,0) * 100%);background:var(--gold);transition:width .25s linear}
+.welcome-ico{width:13px;height:13px;fill:currentColor;flex:none}
+.welcome-ico .ico-pause,.welcome-btn.playing .ico-play{display:none}
+.welcome-btn.playing .ico-pause{display:inline}
+.welcome-cap{margin:14px 0 0;font-size:17px;line-height:1.45;color:var(--text);max-width:62ch;min-height:1.45em}
+.welcome-note{margin:6px 0 0;font-size:12px;color:var(--muted)}
 .lg-head{display:flex;align-items:center;gap:6px;margin:-4px -6px 6px -4px;cursor:grab;touch-action:none;user-select:none}
 .map-legend.dragging .lg-head{cursor:grabbing}
 .map-legend.dragging{box-shadow:0 18px 40px rgba(0,0,0,.45);transition:none}
@@ -690,7 +697,16 @@ browse the <a href="e/">full organization index</a> or use the open dataset
     <div class="hero-cta">
       <a class="btn btn-pri" href="https://the-open-accelerator.com/residency/" target="_blank" rel="noopener">Apply for the TOA Residency</a>
       <a class="btn btn-sec" href="https://the-open-accelerator.com/community/" target="_blank" rel="noopener">Join the Community</a>
+      <button type="button" class="btn btn-sec welcome-btn" id="welcomeBtn" aria-pressed="false" aria-describedby="welcomeNote">
+        <svg class="welcome-ico" viewBox="0 0 16 16" aria-hidden="true"><path class="ico-play" d="M4 2.5v11l9-5.5z"/><path class="ico-pause" d="M4 2.5h3v11H4zM9 2.5h3v11H9z"/></svg>
+        <span id="welcomeLabel">Play the 30-second welcome</span>
+      </button>
+      <audio id="welcomeAudio" src="media/welcome.mp3" preload="none">
+        <track kind="captions" src="media/welcome.vtt" srclang="en" label="English">
+      </audio>
     </div>
+    <p class="welcome-cap" id="welcomeCap" hidden></p>
+    <p class="welcome-note" id="welcomeNote">AI voice, scripted from this hackathon's opening keynote.</p>
     <div class="stats" id="stats"></div>
   </div>
 </header>
@@ -2210,6 +2226,20 @@ $("tillOpen").addEventListener("click", ()=>{
   };
   mic.addEventListener("click", toggle);
   document.addEventListener("keydown", e => { if(e.altKey && (e.code === "KeyM")){ e.preventDefault(); toggle(); } });
+})();
+
+/* ---------- the 30-second welcome (AI voice, captioned line by line) ---------- */
+(function initWelcome(){
+  const a = $("welcomeAudio"), b = $("welcomeBtn"), cap = $("welcomeCap"), lab = $("welcomeLabel");
+  if(!a || !b) return;
+  const track = a.textTracks && a.textTracks[0];
+  if(track){ track.mode = "hidden"; track.addEventListener("cuechange", ()=>{ const c = track.activeCues && track.activeCues[0]; if(c) cap.textContent = c.text; }); }
+  const set = playing => { b.classList.toggle("playing", playing); b.setAttribute("aria-pressed", String(playing)); lab.textContent = playing ? "Pause the welcome" : (a.currentTime > 0 && !a.ended ? "Resume the welcome" : "Play the 30-second welcome"); };
+  b.addEventListener("click", ()=>{ if(a.paused){ cap.hidden = false; a.play().catch(()=>{ cap.textContent = "Couldn't play audio here. The words are below."; }); } else a.pause(); });
+  a.addEventListener("play", ()=>set(true));
+  a.addEventListener("pause", ()=>set(false));
+  a.addEventListener("timeupdate", ()=>b.style.setProperty("--p", a.duration ? a.currentTime / a.duration : 0));
+  a.addEventListener("ended", ()=>{ a.currentTime = 0; b.style.setProperty("--p", 0); set(false); setTimeout(()=>{ if(a.paused) cap.hidden = true; }, 2500); });
 })();
 
 /* ---------- legends: drag anywhere on the map, minimise to dots ---------- */
