@@ -2310,6 +2310,22 @@ renderReceipt(false);
 function fitAsk(){ const t = $("askInput"); t.style.height = "auto"; t.style.height = t.scrollHeight + "px"; }
 $("askInput").addEventListener("input", fitAsk);
 $("askInput").addEventListener("keydown", e=>{ if(e.key === "Enter"){ e.preventDefault(); applyAsk($("askInput").value); } });
+// the placeholder backspaces itself as the counter scrolls away, and retypes on the way back
+(function scrollTypePlaceholder(){
+  const inp = $("askInput"), full = inp.getAttribute("placeholder"), box = document.querySelector(".counter");
+  if(!inp || !box || reduceMotion()) return;
+  let shown = full.length;
+  const update = () => {
+    if(inp.value) return;
+    const r = box.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, (-r.top + 40) / (r.height * 0.55)));
+    const n = Math.round(full.length * (1 - p));
+    if(n !== shown){ shown = n; inp.setAttribute("placeholder", full.slice(0, n) + (n && n < full.length ? "|" : "")); }
+  };
+  // the page scrolls on <body>, not the window, so listen to every scroll (capture)
+  document.addEventListener("scroll", update, {passive:true, capture:true});   // one rect read + a string slice per event
+  update();
+})();
 document.querySelectorAll(".ask-try button").forEach(b=>b.addEventListener("click", ()=>{
   $("askInput").value = b.dataset.try; applyAsk(b.dataset.try);
 }));
